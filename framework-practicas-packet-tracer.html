@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Framework de prácticas · Packet Tracer</title>
+<script>try{if(localStorage.getItem("pt_ui_theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--l1:#f4f4f4;--l2:#e0e0e0;--bd:#e0e0e0;--tx:#161616;--tx2:#525252;--pri:#0f62fe;--lk:#0f62fe;--ok:#198038;--err:#da1e28;--fc:#0f62fe;--md:#fff;
+--blue:#0043ce;--teal:#005d5d;--purple:#6929c4;--red:#a2191f;--gray:#525252;--green:#0e6027;color-scheme:light}
+.dark{--bg:#161616;--l1:#262626;--l2:#393939;--bd:#393939;--tx:#f4f4f4;--tx2:#c6c6c6;--lk:#78a9ff;--ok:#42be65;--fc:#fff;--md:#262626;
+--blue:#78a9ff;--teal:#08bdba;--purple:#be95ff;--red:#ff8389;--gray:#c6c6c6;--green:#42be65;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 14px/1.43 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif;letter-spacing:.16px}
+:focus-visible{outline:2px solid var(--fc);outline-offset:-2px}
+code,pre,.mono,kbd{font-family:"IBM Plex Mono",Menlo,Consolas,monospace}
+code{background:var(--l1);padding:1px 5px;font-size:12.5px}
+kbd{background:var(--l2);padding:1px 6px;font-size:12px}
+svg.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:square;flex:none}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:1px solid transparent;background:none;color:var(--lk);font:inherit;letter-spacing:.16px;cursor:pointer;text-decoration:none}
+.btn.sm{min-height:32px;padding:0 12px;font-size:13px}.btn.block{width:100%;justify-content:space-between}
+.btn.pri{background:var(--pri);color:#fff}.btn.pri:hover{background:#0353e9}
+.btn.ter{border-color:var(--lk)}.btn.ter:hover{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.ghost:hover{background:var(--l2)}.btn.dng{color:var(--err)}.btn.red{background:var(--err);color:#fff}
+.btn.icon{padding:0 8px;min-width:32px;justify-content:center}
+/* encabezado */
+.hd{position:sticky;top:0;z-index:30;background:#161616;color:#f4f4f4}
+.hd .row{display:flex;align-items:center;height:48px}
+.hd .btn{color:#f4f4f4;min-height:48px;padding:0 12px}.hd .btn:hover{background:#2c2c2c}.hd .btn.on{background:#0f62fe}
+.hd h1{font-size:14px;font-weight:600;margin:0 0 0 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}.hd h1 span{font-weight:400;color:#c6c6c6;margin-left:8px}
+.hd .sp{flex:1}.hd .pg{font-size:13px;margin-right:8px;white-space:nowrap}
+.hd .sv{position:relative}.hd .sv .dot{position:absolute;top:10px;right:4px;width:8px;height:8px;border-radius:50%;background:#f1c21b;display:none}
+.hbar{height:3px;background:#393939}.hbar i{display:block;height:100%;background:#42be65;width:0;transition:width .25s}
+#menu{display:none}
+/* estructura */
+.shell{display:flex}
+.side{width:288px;flex:none;background:var(--l1);border-right:1px solid var(--bd);position:sticky;top:51px;height:calc(100vh - 51px);overflow:auto}
+.pan{padding:24px 16px;border-bottom:1px solid var(--bd)}
+.big{font-size:42px;font-weight:300;line-height:1.1}.big small{font-size:20px;margin-left:2px}
+.mu{color:var(--tx2);font-size:12px;margin:4px 0 0}
+.meter{margin-top:14px}.mh{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.mh b{font-weight:600}
+.bar{height:4px;background:var(--l2)}.bar i{display:block;height:100%;background:var(--pri);transition:width .25s}.bar.ok i{background:var(--ok)}
+.pan .btn.block{margin-top:20px}
+.bk{margin-top:14px;font-size:12px;color:var(--tx2);display:flex;gap:8px;align-items:flex-start}
+.bk .dot{width:8px;height:8px;border-radius:50%;background:#8d8d8d;margin-top:5px;flex:none}.bk .dot.w{background:#f1c21b}.bk .dot.g{background:var(--ok)}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}.chk input{width:16px;height:16px;margin:0}
+.nv{padding:8px 0}.nv button{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;min-height:36px;padding:0 16px;background:none;border:0;border-left:3px solid transparent;color:var(--tx);font:inherit;text-align:left;cursor:pointer}
+.nv button:hover{background:var(--l2)}
+.nv .c{font-size:12px;color:var(--tx2);font-variant-numeric:tabular-nums;flex:none}.nv .c.ok{color:var(--ok)}
+.nv button span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nv .n1{font-weight:600;margin-top:6px}.nv .n2{padding-left:28px;font-size:13px}.nv .n3{padding-left:44px;font-size:12.5px;color:var(--tx2)}
+.nv .none{padding:8px 16px;color:var(--tx2);font-size:13px}
+main{flex:1;min-width:0;padding:32px 48px 120px;max-width:1000px}
+.info{border:1px solid var(--bd);background:var(--l1);padding:16px;margin-bottom:8px}
+.info .lb:first-child{margin-top:0}
+.fl{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lb{display:block;font-size:12px;color:var(--tx2);margin:14px 0 4px}
+textarea,select,input[type=text]{width:100%;font:inherit;color:var(--tx);background:var(--l1);border:0;border-bottom:1px solid #8d8d8d;padding:10px 16px;min-height:40px;resize:vertical;letter-spacing:.16px}
+.info input[type=text]{background:var(--bg)}
+.hin{background:var(--l1)!important}
+.note{border-left:3px solid #f1c21b;background:var(--l1);padding:12px 16px;margin:16px 0}
+.tg{display:inline-block;padding:2px 8px;border-radius:16px;font-size:12px;line-height:18px;white-space:nowrap;color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.cd{font:500 12px "IBM Plex Mono",monospace;color:var(--tx2)}
+/* bloques */
+.blk{padding-left:var(--ind,0px);position:relative}
+.blk.flash{animation:fl 1.6s}@keyframes fl{0%,60%{background:color-mix(in srgb,var(--pri) 14%,transparent)}}
+.ctl{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:14px 0 6px;padding:4px 6px;background:var(--l1);border:1px solid var(--bd)}
+.ctl select{width:auto;min-height:32px;padding:0 8px;font-size:12px;background:var(--bg)}.ctl .sp{flex:1}
+.ins{display:flex;gap:6px;flex-wrap:wrap;padding:10px;background:var(--l1);border:1px dashed var(--tx2);margin:8px 0}
+.addbar{position:fixed;left:288px;right:0;bottom:0;z-index:20;background:var(--bg);border-top:1px solid var(--bd);padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.addbar .mu{margin:0 6px 0 0}
+.empty{border:1px dashed var(--tx2);padding:32px;text-align:center;color:var(--tx2);margin-top:24px}
+.k-h1{margin-top:44px}.k-h1 .hrow{display:flex;gap:10px;align-items:baseline}
+.k-h1 h3{font-size:22px;font-weight:400;margin:0;max-width:60ch}.k-h1 header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.k-h1 .hin{font-size:20px}.k-h1 .hrow{flex:1;min-width:0}.k-h1 .hrow .hin{flex:1}.k-h1 .cnt{font-size:13px;font-variant-numeric:tabular-nums}
+.k-h1 .bar{margin:12px 0 0}
+.st{display:flex;gap:12px;padding:20px 0 8px 12px;border-left:3px solid transparent}
+.st.done{border-left-color:var(--ok)}.st.done h4{color:var(--tx2)}
+.ck{position:relative;width:20px;height:20px;flex:none;margin-top:1px;cursor:pointer}.ck input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.ck i{position:absolute;inset:2px;border:1px solid var(--tx);pointer-events:none}.ck input:checked+i{background:var(--tx)}
+.ck input:checked+i::after{content:"";position:absolute;left:4px;top:0;width:4px;height:9px;border:solid var(--bg);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.ck input:focus-visible+i{outline:2px solid var(--fc);outline-offset:2px}
+.sb{flex:1;min-width:0}.sm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.st h4{font-size:16px;font-weight:600;margin:6px 0;line-height:1.4}.k-h3 h4{font-size:14.5px}
+.txt{max-width:75ch;line-height:1.6;margin:8px 0}.txt p{margin:0 0 10px}.txt ul,.txt ol{margin:6px 0 10px;padding-left:22px}
+.tbl{overflow-x:auto;margin:10px 0}table{border-collapse:collapse;width:100%;font-size:13px}th{background:var(--l1);text-align:left}th,td{padding:8px 12px;border:1px solid var(--bd);vertical-align:top}
+.tx{min-height:72px;font-size:14px}.tx.mono{font-family:"IBM Plex Mono",monospace;font-size:13px}.hint{font-size:11px;color:var(--tx2);margin:2px 0 0}
+.code{background:var(--l1);margin:12px 0}.code-h{display:flex;justify-content:space-between;align-items:center;padding-left:16px;font-size:12px;color:var(--tx2);border-bottom:1px solid var(--bd)}
+.code pre{margin:0;padding:14px 16px;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.code pre code{background:none;padding:0;font-size:inherit}
+.ev{border:1px solid var(--bd);padding:16px;margin-top:10px}.ev.has{border-color:var(--ok)}.ev.act{outline:2px solid var(--pri);outline-offset:1px}
+.evh{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.capt{margin:10px 0;font-weight:600}
+.zone{border:1px dashed var(--tx2);padding:20px;text-align:center;outline-offset:-3px}
+.zone.over,.zone:focus{background:color-mix(in srgb,var(--pri) 10%,transparent);border-color:var(--pri)}.zone p{margin:8px 0 12px}
+.acts{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:6px}.has .acts{justify-content:flex-start}
+.shot{display:block;max-width:100%;max-height:300px;border:1px solid var(--bd);cursor:zoom-in;margin-top:8px}
+.q{padding:16px 0 8px;margin-top:8px}.q h4{margin:8px 0;font-size:16px;font-weight:600;max-width:70ch;line-height:1.4}
+/* inicio */
+.start{position:fixed;inset:0;background:var(--bg);z-index:40;overflow:auto;display:none}.start.on{display:block}
+.start-in{max-width:1000px;margin:0 auto;padding:40px 24px 64px;position:relative}
+.start h1{font-size:34px;font-weight:300;margin:6px 0 8px;line-height:1.2}.kick{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--lk)}
+.lead{max-width:70ch;line-height:1.6;font-size:15px;margin:0 0 24px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;margin-top:24px;background:var(--bd)}
+.opt{background:var(--l1);padding:20px 16px;display:flex;flex-direction:column;gap:10px;border-top:3px solid var(--pri)}.opt.over{background:color-mix(in srgb,var(--pri) 12%,var(--l1))}
+.opt h3{margin:0;font-size:18px;font-weight:400}.opt p{margin:0;color:var(--tx2);flex:1}.opt .acts{justify-content:flex-start;margin:0}
+.acc{border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin:28px 0}.acc summary{min-height:48px;display:flex;align-items:center;cursor:pointer;font-weight:600}.acc>div{padding:0 0 16px}
+/* modales y toasts */
+.ov{position:fixed;inset:0;background:rgba(22,22,22,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}.ov.on{display:flex}
+.md{background:var(--md);width:100%;max-width:560px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;position:relative}
+.md.wide{max-width:1000px}.md h2{margin:0;padding:16px 56px 0 16px;font-size:20px;font-weight:400}.mb{padding:16px;display:grid;gap:16px}
+.mf{display:flex;justify-content:flex-end;margin-top:8px}.mf .btn{min-width:140px;min-height:64px;align-items:flex-start;padding-top:16px}
+.x{position:absolute;right:0;top:0}
+.rt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.rt label{border:1px solid var(--bd);padding:12px;cursor:pointer;display:grid;gap:2px}
+.rt label:has(input:checked){border:2px solid var(--pri);padding:11px}.rt input{position:absolute;opacity:0}.rt b{font-weight:600}.rt span{font-size:12px;color:var(--tx2)}
+.toasts{position:fixed;right:16px;bottom:72px;display:grid;gap:8px;z-index:60}
+.toast{background:var(--tx);color:var(--bg);border-left:3px solid var(--c,#4589ff);padding:12px 16px;min-width:240px;max-width:380px;box-shadow:0 2px 6px rgba(0,0,0,.3);display:flex;gap:12px;align-items:center;justify-content:space-between}
+.toast button{background:none;border:0;color:var(--bg);text-decoration:underline;cursor:pointer;font:inherit}
+@media(max-width:1055px){#menu{display:inline-flex}.side{position:fixed;left:0;top:51px;z-index:25;transform:translateX(-100%);transition:transform .2s;width:300px}.side.open{transform:none}
+main{padding:24px 16px 140px}.hd .lbl{display:none}.hd h1 span{display:none}.fl,.rt{grid-template-columns:1fr}.addbar{left:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hd">
+  <div class="row">
+    <button class="btn" id="menu" aria-label="Abrir navegación" onclick="$('#side').classList.toggle('open')"></button>
+    <h1 id="hd-title">Framework de prácticas<span>Packet Tracer</span></h1>
+    <div class="sp"></div>
+    <span class="pg" id="hp"></span>
+    <button class="btn" id="b-edit" onclick="toggleEdit()" title="Añadir, editar y reordenar la estructura"><span class="lbl">Editar estructura</span></button>
+    <button class="btn" id="b-tpl" onclick="$('#tpl-file').click()" title="Cargar plantilla Markdown (.md)"><span class="lbl">Plantilla</span></button>
+    <button class="btn sv" id="b-save" onclick="saveProgress()" title="Guardar progreso (Ctrl+S)"><span class="dot" id="sdot"></span><span class="lbl">Guardar</span></button>
+    <button class="btn" id="b-load" onclick="$('#imp').click()" title="Cargar progreso desde un .json"><span class="lbl">Cargar</span></button>
+    <button class="btn" id="b-exp" onclick="openExport()" title="Exportar reporte (Ctrl+E)"><span class="lbl">Reporte</span></button>
+    <button class="btn" id="b-th" onclick="toggleTheme()" title="Cambiar tema"></button>
+    <button class="btn" id="b-home" onclick="showStart()" title="Pantalla de inicio"></button>
+  </div>
+  <div class="hbar"><i id="hbar"></i></div>
+</header>
+<input type="file" id="tpl-file" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden onchange="onTplInput(event)">
+<input type="file" id="imp" accept=".json,application/json" hidden onchange="onJsonInput(event)">
+<input type="file" id="add-imgs" accept="image/*" multiple hidden onchange="addFiles(this)">
+<div class="shell"><aside class="side" id="side"></aside><main id="main"></main></div>
+<div class="addbar" id="addbar" style="display:none"></div>
+
+<!-- pantalla de inicio -->
+<div class="start on" id="start"><div class="start-in">
+  <button class="btn x" id="st-x" onclick="hideStart()" aria-label="Volver a la práctica" style="display:none"></button>
+  <div class="kick">Framework · Cisco Packet Tracer</div>
+  <h1>Documenta tu práctica de Packet Tracer</h1>
+  <p class="lead">Crea un reporte desde cero e ve agregando secciones, pasos, preguntas, texto e imágenes, o parte de una plantilla Markdown y solo sube tus evidencias. Al final exportas el reporte en HTML, Markdown o PDF.</p>
+  <div class="info">
+    <label class="lb" for="s-title">Nombre de la práctica</label><input type="text" id="s-title" placeholder="Ej. Configuración de DHCPv4 con relay">
+    <div class="fl"><div><label class="lb" for="s-name">Tu nombre (opcional aquí)</label><input type="text" id="s-name" autocomplete="name"></div><div><label class="lb" for="s-group">Grupo / materia (opcional)</label><input type="text" id="s-group"></div></div>
+  </div>
+  <div class="opts">
+    <div class="opt"><h3>Reporte en blanco</h3><p>Empiezas vacío y añades tú mismo secciones (#), pasos (##), sub-pasos (###), preguntas (####), texto, comandos e imágenes.</p><div class="acts"><button class="btn pri" onclick="startBlank()">Crear en blanco</button></div></div>
+    <div class="opt" id="o-tpl" ondragover="dragO(event,1)" ondragleave="dragO(event,0)" ondrop="dropO(event)"><h3>Usar una plantilla (.md)</h3><p>Sube un Markdown con la estructura de la práctica y aparecerá lista para marcar pasos, responder y subir capturas. También puedes arrastrar el archivo aquí.</p><div class="acts"><button class="btn pri" onclick="$('#tpl-file').click()">Subir plantilla</button><button class="btn ghost sm" onclick="useSample()">Probar con ejemplo</button><button class="btn ghost sm" onclick="downloadSample()">Descargar ejemplo</button><button class="btn ghost sm" onclick="downloadGuide()" title="Archivo .md con las reglas del formato, para dárselo a una IA">Guía de formato para IA</button></div></div>
+    <div class="opt"><h3>Cargar progreso (.json)</h3><p>Retoma una práctica que guardaste antes, con sus avances, respuestas e imágenes.</p><div class="acts"><button class="btn ter" onclick="$('#imp').click()">Subir .json</button></div></div>
+    <div class="opt" id="o-cont" style="display:none"><h3>Continuar</h3><p id="o-cont-t"></p><div class="acts"><button class="btn ter" onclick="hideStart()">Seguir con esta práctica</button></div></div>
+  </div>
+  <details class="acc"><summary>Formato de la plantilla Markdown</summary><div>
+    <div class="tbl"><table><thead><tr><th>En el .md</th><th>Aparece como</th></tr></thead><tbody>
+    <tr><td><code># Título</code></td><td>Sección (con barra de avance)</td></tr>
+    <tr><td><code>## Título</code></td><td>Paso (con casilla de completado)</td></tr>
+    <tr><td><code>### Título</code></td><td>Sub-paso (con casilla)</td></tr>
+    <tr><td><code>#### Pregunta</code></td><td>Pregunta con cuadro de respuesta (las líneas <code>&gt; …</code> siguientes se toman como respuesta)</td></tr>
+    <tr><td>Texto, listas, tablas</td><td>Texto normal (admite <code>**negrita**</code>, <code>`código`</code>, listas y tablas Markdown)</td></tr>
+    <tr><td>Bloque con tres comillas invertidas</td><td>Bloque de comandos con botón «Copiar»</td></tr>
+    <tr><td><code>![Descripción de la captura](x)</code> o <code>[IMAGEN: Descripción]</code></td><td>Espacio para subir o pegar esa evidencia</td></tr>
+    <tr><td>Encabezado <code>---</code> al inicio con <code>titulo:</code>, <code>estudiante:</code>, <code>grupo:</code></td><td>Rellena los datos de la práctica (opcional)</td></tr>
+    </tbody></table></div></div></details>
+</div></div>
+
+<!-- lightbox -->
+<div class="ov" id="lb-ov" onclick="if(event.target===this)closeOv('lb-ov')"><div class="md wide"><button class="btn x" onclick="closeOv('lb-ov')" aria-label="Cerrar" id="lb-x"></button><h2 id="lb-t"></h2>
+  <div class="mb"><img id="lb-img" alt="" style="max-width:100%;max-height:70vh;margin:auto"><div style="margin:0"><button class="btn ter sm" id="lb-dl">Descargar</button></div></div></div></div>
+
+<!-- exportar -->
+<div class="ov" id="export-modal" onclick="if(event.target===this)closeOv('export-modal')"><div class="md"><button class="btn x" onclick="closeOv('export-modal')" aria-label="Cerrar" id="ex-x"></button><h2>Exportar reporte</h2>
+  <div class="mb">
+    <div class="rt"><label><input type="radio" name="exp-format" value="html" checked><b>HTML</b><span>Autocontenido</span></label><label><input type="radio" name="exp-format" value="md"><b>Markdown</b><span>.zip con imágenes</span></label><label><input type="radio" name="exp-format" value="pdf"><b>PDF</b><span>Diálogo de impresión</span></label></div>
+    <div><label class="lb" for="export-theme" style="margin-top:0">Estilo visual del reporte</label><select id="export-theme"></select></div>
+    <div><label class="lb" for="ex-title" style="margin-top:0">Nombre de la práctica</label><input type="text" id="ex-title"></div>
+    <div class="fl"><div><label class="lb" for="ex-name" style="margin-top:0">Estudiante / equipo</label><input type="text" id="ex-name"></div><div><label class="lb" for="ex-group" style="margin-top:0">Matrícula / grupo / materia</label><input type="text" id="ex-group"></div></div>
+    <p class="mu" id="export-summary-pill"></p></div>
+  <div class="mf"><button class="btn ghost" onclick="closeOv('export-modal')">Cancelar</button><button class="btn pri" onclick="runExport()">Generar reporte</button></div></div></div>
+
+<!-- confirmación -->
+<div class="ov" id="cf-ov"><div class="md"><h2 id="cf-t"></h2><div class="mb"><p id="cf-m" style="margin:0"></p></div>
+  <div class="mf"><button class="btn ghost" onclick="closeOv('cf-ov')">Cancelar</button><button class="btn red" id="cf-ok"></button></div></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+/* ================= utilidades ================= */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const E=s=>s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const uid=()=>'b'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const ICON={copy:'<rect x="9" y="9" width="11" height="11"/><path d="M5 15V4h11"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+img:'<rect x="3" y="4" width="18" height="16"/><path d="M3 16l5-5 4 4 3-3 6 6"/>',trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',moon:'<path d="M20 14A8 8 0 0110 4a8 8 0 1010 10z"/>',
+file:'<path d="M7 3h7l4 4v14H7zM14 3v4h4"/>',dl:'<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/>',ul:'<path d="M12 15V4m0 0L8 8m4-4l4 4M5 20h14"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',tpl:'<path d="M7 3h7l4 4v14H7zM14 3v4h4M10 13h5M10 17h5"/>',home:'<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',up:'<path d="M12 19V5m0 0l-5 5m5-5l5 5"/>',down:'<path d="M12 5v14m0 0l-5-5m5 5l5-5"/>',undo:'<path d="M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3"/>'};
+const ic=n=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+$('#menu').innerHTML=ic('menu');$('#b-th').innerHTML=ic('moon');$('#b-home').innerHTML=ic('home');$('#lb-x').innerHTML=ic('x');$('#ex-x').innerHTML=ic('x');$('#st-x').innerHTML=ic('x');
+$('#b-edit').insertAdjacentHTML('afterbegin',ic('edit'));$('#b-tpl').insertAdjacentHTML('afterbegin',ic('tpl'));$('#b-save').insertAdjacentHTML('afterbegin',ic('dl'));
+$('#b-load').insertAdjacentHTML('afterbegin',ic('ul'));$('#b-exp').insertAdjacentHTML('afterbegin',ic('file'));
+
+/* Markdown mínimo (inline, listas, tablas) */
+function inl(s){return String(s).split(/(`[^`\n]+`)/).map((p,i)=>{
+  if(i%2)return '<code>'+E(p.slice(1,-1))+'</code>';
+  let h=E(p);h=h.replace(/\*\*(?!\s)(.+?)(?<!\s)\*\*/g,'<strong>$1</strong>');
+  return h.replace(/(^|[^\w*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\w*])/g,'$1<em>$2</em>')}).join('')}
+const reLi=/^\s*([-*+]|\d+[.)])\s+/,reTb=/^\s*\|.*\|\s*$/;
+function md(text){const L=String(text).replace(/\r/g,'').split('\n');let out='',i=0;
+  while(i<L.length){const l=L[i];if(!l.trim()){i++;continue}
+    if(reTb.test(l)&&i+1<L.length&&/^\s*\|?[\s:|-]+\|?\s*$/.test(L[i+1])&&L[i+1].includes('-')){
+      const row=r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());const head=row(l);i+=2;const rows=[];
+      while(i<L.length&&/^\s*\|/.test(L[i])){rows.push(row(L[i]));i++}
+      out+='<div class="tbl"><table><thead><tr>'+head.map(c=>'<th>'+inl(c)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>'<td>'+inl(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';continue}
+    if(reLi.test(l)){const ord=/^\s*\d+[.)]/.test(l),items=[];while(i<L.length&&reLi.test(L[i])){items.push(L[i].replace(reLi,''));i++}
+      out+=(ord?'<ol>':'<ul>')+items.map(x=>'<li>'+inl(x)+'</li>').join('')+(ord?'</ol>':'</ul>');continue}
+    const para=[l];i++;while(i<L.length&&L[i].trim()&&!reTb.test(L[i])&&!reLi.test(L[i])){para.push(L[i]);i++}
+    out+='<p>'+para.map(inl).join('<br>')+'</p>'}
+  return out}
+
+/* ================= estado ================= */
+const KEY='pt_framework_doc_v1',META='pt_framework_meta',DBN='PTFramework_DB';
+const TYPES=[['h1','Sección','#'],['h2','Paso','##'],['h3','Sub-paso','###'],['q','Pregunta','####'],['p','Texto','¶'],['img','Imagen',''],['code','Comandos','</>']];
+const TNAME={h1:'Sección (#)',h2:'Paso (##)',h3:'Sub-paso (###)',q:'Pregunta (####)',p:'Texto',img:'Imagen',code:'Comandos'};
+const LV={h1:1,h2:2,h3:3};
+let doc=null,images={},meta={backupAt:null,dirty:false},db=null,edit=false,active=null,lastPos=null,insertFor=null,focusId=null,reveal=null,undoStack=[];
+const mk=(t,o)=>({id:uid(),t,text:'',cap:'',note:'',ans:'',done:false,lang:'',...o});
+const get=id=>doc.blocks.find(b=>b.id===id),idx=id=>doc.blocks.findIndex(b=>b.id===id);
+const pctOf=(a,b)=>b?Math.round(a/b*100):0;
+const tag=(t,k)=>`<span class="tg" style="--c:var(--${k||'blue'})">${E(t)}</span>`;
+const meter=(l,a,b)=>`<div class="meter"><div class="mh"><span>${l}</span><b>${a}/${b}</b></div><div class="bar${a&&a===b?' ok':''}"><i style="width:${pctOf(a,b)}%"></i></div></div>`;
+const trk=b=>b.t==='h2'||b.t==='h3'?[1,!!b.done]:b.t==='img'?[1,!!images[b.id]]:b.t==='q'?[1,!!(b.ans||'').trim()]:[0,0];
+function stats(){const s={st:0,sd:0,et:0,ed:0,qt:0,qd:0};doc.blocks.forEach(b=>{
+  if(b.t==='h2'||b.t==='h3'){s.st++;if(b.done)s.sd++}else if(b.t==='img'){s.et++;if(images[b.id])s.ed++}else if(b.t==='q'){s.qt++;if((b.ans||'').trim())s.qd++}});
+  s.T=s.st+s.et+s.qt;s.D=s.sd+s.ed+s.qd;s.pct=pctOf(s.D,s.T);return s}
+function grp(){const r={};let cur=null;doc.blocks.forEach(b=>{if(b.t==='h1'){cur=b.id;r[cur]=[0,0]}else if(cur){const[t,d]=trk(b);if(t){r[cur][1]++;if(d)r[cur][0]++}}});return r}
+function nums(){const lab={},ev={};let a=0,b2=0,c=0,q=0,im=0;doc.blocks.forEach(x=>{
+  if(x.t==='h1'){a++;b2=0;c=0}else if(x.t==='h2'){b2++;c=0}else if(x.t==='h3')c++;
+  if(LV[x.t])lab[x.id]=doc.numbering?[a,b2,c].slice(0,LV[x.t]).filter(n=>n>0).join('.'):'';
+  else if(x.t==='q'){q++;lab[x.id]=doc.numbering?'P'+q+'.':''}
+  else if(x.t==='img'){im++;ev[x.id]='E'+String(im).padStart(2,'0')}});return{lab,ev}}
+const slug=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+
+/* ================= persistencia ================= */
+let _pt=null;
+function persistDoc(){try{localStorage.setItem(KEY,JSON.stringify(doc))}catch(e){}}
+function persistMeta(){try{localStorage.setItem(META,JSON.stringify(meta))}catch(e){}}
+function dirty(){meta.dirty=true;persistMeta();clearTimeout(_pt);_pt=setTimeout(persistDoc,350);ui()}
+function loadLocal(){try{const p=JSON.parse(localStorage.getItem(KEY)||'null');if(p&&Array.isArray(p.blocks))doc=normDoc(p);const m=JSON.parse(localStorage.getItem(META)||'null');if(m)meta=m}catch(e){}}
+function normDoc(p){return{title:p.title||'',student:p.student||'',group:p.group||'',numbering:p.numbering!==false,blocks:(p.blocks||[]).map(b=>({...mk(TNAME[b.t]?b.t:'p'),...b,t:TNAME[b.t]?b.t:'p'}))}}
+const idb=(mode,fn)=>new Promise((res,rej)=>{if(!db)return rej();try{const r=fn(db.transaction('imgs',mode).objectStore('imgs'));r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
+const initDB=()=>new Promise((res,rej)=>{try{const r=indexedDB.open(DBN,1);r.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains('imgs'))e.target.result.createObjectStore('imgs',{keyPath:'id'})};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
+function blobUrl(d){const[h,b]=d.split(',');const mime=(h.match(/:(.*?);/)||[])[1]||'image/png';const bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:mime}))}
+async function putImg(r){try{r.url=blobUrl(r.dataUrl)}catch(e){return}images[r.id]=r;const{url,...rec}=r;try{await idb('readwrite',s=>s.put(rec))}catch(e){}}
+async function delImg(id){const r=images[id];if(r&&r.url)URL.revokeObjectURL(r.url);delete images[id];try{await idb('readwrite',s=>s.delete(id))}catch(e){}}
+async function clearImgs(){Object.values(images).forEach(r=>r.url&&URL.revokeObjectURL(r.url));images={};try{await idb('readwrite',s=>s.clear())}catch(e){}}
+
+/* ================= UI general ================= */
+function showToast(m,t='info',act){const c={success:'#42be65',error:'#fa4d56',warning:'#f1c21b',info:'#4589ff'}[t];const d=document.createElement('div');d.className='toast';d.style.setProperty('--c',c);
+  const s=document.createElement('span');s.textContent=m;d.appendChild(s);if(act){const b=document.createElement('button');b.textContent=act.label;b.onclick=()=>{act.fn();d.remove()};d.appendChild(b)}
+  $('#toasts').appendChild(d);setTimeout(()=>d.remove(),act?7000:4200)}
+const openOv=id=>$('#'+id).classList.add('on'),closeOv=id=>$('#'+id).classList.remove('on');
+function ask(t,m,ok,fn){$('#cf-t').textContent=t;$('#cf-m').textContent=m;const b=$('#cf-ok');b.textContent=ok;b.onclick=()=>{closeOv('cf-ov');fn()};openOv('cf-ov')}
+function toggleTheme(){const r=document.documentElement;r.classList.toggle('dark');try{localStorage.setItem('pt_ui_theme',r.classList.contains('dark')?'dark':'light')}catch(e){}}
+let _ut=null;function ui(){clearTimeout(_ut);_ut=setTimeout(()=>{renderSide();updateCounts();hdr()},150)}
+function hdr(){if(!doc)return;const s=stats();$('#hp').textContent=s.T?s.pct+'%':'';$('#hbar').style.width=s.pct+'%';
+  $('#hd-title').innerHTML=E(doc.title||'Práctica sin nombre')+'<span>Packet Tracer</span>';$('#sdot').style.display=meta.dirty?'block':'none';
+  const be=$('#b-edit');be.classList.toggle('on',edit);be.querySelector('.lbl').textContent=edit?'Terminar edición':'Editar estructura'}
+function updateCounts(){const g=grp();$$('[data-cnt]').forEach(e=>{const v=g[e.dataset.cnt];if(v)e.textContent=v[0]+'/'+v[1]});
+  $$('[data-bar]').forEach(e=>{const v=g[e.dataset.bar];if(v)e.firstElementChild.style.width=pctOf(v[0],v[1])+'%'})}
+function ar(el){el.style.height='auto';el.style.height=Math.max(el.scrollHeight,el.classList.contains('tx')?72:0)+'px'}
+
+/* ================= edición de estructura ================= */
+function snap(){undoStack.push(JSON.stringify(doc.blocks));if(undoStack.length>40)undoStack.shift()}
+function undo(){if(!undoStack.length)return showToast('No hay nada que deshacer.','info');doc.blocks=JSON.parse(undoStack.pop());dirty();render()}
+function toggleEdit(){edit=!edit;insertFor=null;render()}
+function toggleIns(id){insertFor=insertFor===id?null:id;render()}
+function addBlock(t,after){snap();const b=mk(t),i=after?idx(after)+1:doc.blocks.length;doc.blocks.splice(i,0,b);insertFor=null;edit=true;focusId=b.id;dirty();render()}
+function delBlock(id){snap();const b=get(id);doc.blocks.splice(idx(id),1);insertFor=null;dirty();render();showToast('Bloque eliminado.','info',{label:'Deshacer',fn:undo})}
+function setType(id,t){snap();const b=get(id);if(b.t==='img'&&t!=='img')b.text=b.cap||b.text;if(t==='img')b.cap=b.text||b.cap;b.t=t;dirty();render()}
+function setF(id,f,v){const b=get(id);if(b){b[f]=v;dirty()}}
+function setDoc(f,v){doc[f]=v;dirty()}
+function setNum(v){doc.numbering=v;dirty();render()}
+function toggleDone(id,v){const b=get(id);b.done=v;const e=document.getElementById(id);if(e){const s=e.querySelector('.st');if(s)s.classList.toggle('done',v)}dirty()}
+function range(i){const L=LV[doc.blocks[i].t];if(!L)return[i,i+1];let e=i+1;while(e<doc.blocks.length&&!(LV[doc.blocks[e].t]&&LV[doc.blocks[e].t]<=L))e++;return[i,e]}
+function mv(id,dir){const i=idx(id),[s,e]=range(i),L=LV[doc.blocks[i].t],B=doc.blocks;let ok=false;snap();
+  if(dir<0){if(s>0){if(!L){const x=B.splice(s,1)[0];B.splice(s-1,0,x);ok=true}else{let ns=-1;for(let p=s-1;p>=0;p--){const l=LV[B[p].t];if(l&&l<L)break;if(l===L){ns=p;break}}
+      if(ns>=0){const seg=B.splice(s,e-s);B.splice(ns,0,...seg);ok=true}}}}
+  else if(e<B.length){if(!L){const x=B.splice(e,1)[0];B.splice(s,0,x);ok=true}else{const nl=LV[B[e].t];if(!(nl&&nl<L)){const[s2,e2]=range(e);const seg=B.splice(s2,e2-s2);B.splice(s,0,...seg);ok=true}}}
+  if(!ok){undoStack.pop();return showToast('No se puede mover más en esa dirección.','info')}
+  reveal=id;dirty();render()}
+
+/* ================= render ================= */
+const insBar=after=>`<div class="ins">${TYPES.map(([t,n,s])=>`<button class="btn ter sm" onclick="addBlock('${t}',${after?`'${after}'`:'null'})">${t==='img'?ic('img'):`<span class="mono">${E(s)}</span>`} ${n}</button>`).join('')}</div>`;
+function codeHtml(b){return`<div class="code"><div class="code-h"><span>${E(b.lang||'Comandos')}</span><button class="btn ghost sm" onclick="copyCode('${b.id}',this)">${ic('copy')}<span>Copiar comandos</span></button></div><pre><code>${E(b.text)}</code></pre></div>`}
+async function copyCode(id,btn){const t=get(id).text;let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
+  if(!ok){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy')}catch(e){}ta.remove()}
+  const l=btn.querySelector('span');const o=l.textContent;l.textContent=ok?'¡Copiado!':'No se pudo copiar';setTimeout(()=>l.textContent=o,1600)}
+function evHtml(b,ctx){const r=images[b.id],id=ctx.ev[b.id],file=`<input type="file" accept="image/*" multiple hidden onchange="pickFile('${b.id}',this)">`;
+  return`<div class="ev${r?' has':''}${active===b.id?' act':''}"><div class="evh"><div><span class="cd">${id}</span></div>${tag(r?'Completada':'Pendiente',r?'green':'gray')}</div>
+  ${edit?`<label class="lb">Descripción de la captura</label><input type="text" class="hin" value="${E(b.cap)}" placeholder="Qué debe mostrar la captura" oninput="setF('${b.id}','cap',this.value)">`:`<p class="capt">${b.cap?inl(b.cap):'<span class="mu">Captura sin descripción</span>'}</p>`}
+  ${r?`<img class="shot" src="${r.url}" alt="${E(b.cap||id)}" onclick="openLb('${b.id}')"><div class="acts"><button class="btn ghost sm" onclick="openLb('${b.id}')">Ampliar</button><button class="btn ghost sm" onclick="downloadImg('${b.id}')">Descargar</button><label class="btn ghost sm">Reemplazar${file}</label><button class="btn ghost sm dng" onclick="rmImg('${b.id}')">Quitar</button><span class="mu">${E(r.updatedAt||'')}</span></div>`
+  :`<div class="zone" tabindex="0" ondrop="dropImg('${b.id}',event)" ondragover="dragZ(event,1)" ondragleave="dragZ(event,0)">${ic('img')}<p>Arrastra tu captura aquí, o haz clic y pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Seleccionar imagen(es)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`}
+  <label class="lb">Observación técnica (opcional, se incluye en el reporte)</label><textarea class="tx auto" rows="2" oninput="setF('${b.id}','note',this.value);ar(this)">${E(b.note)}</textarea></div>`}
+function blockHtml(b,ctx){const lab=ctx.lab[b.id]||'',ind=ctx.ind[b.id]||0;let h='';
+  const ctl=edit?`<div class="ctl"><select onchange="setType('${b.id}',this.value)" aria-label="Tipo de bloque">${Object.keys(TNAME).map(t=>`<option value="${t}"${t===b.t?' selected':''}>${TNAME[t]}</option>`).join('')}</select><span class="sp"></span>
+    <button class="btn ghost sm icon" onclick="mv('${b.id}',-1)" title="${LV[b.t]?'Subir (con su contenido)':'Subir'}">${ic('up')}</button><button class="btn ghost sm icon" onclick="mv('${b.id}',1)" title="${LV[b.t]?'Bajar (con su contenido)':'Bajar'}">${ic('down')}</button>
+    <button class="btn ter sm" onclick="toggleIns('${b.id}')">${ic('plus')} Insertar debajo</button><button class="btn ghost sm icon dng" onclick="delBlock('${b.id}')" title="Eliminar bloque">${ic('trash')}</button></div>`:'';
+  const hin=(ph)=>`<input type="text" class="hin" value="${E(b.text)}" placeholder="${ph}" oninput="setF('${b.id}','text',this.value)">`;
+  if(b.t==='h1')h=`<section class="k-h1"><header><div class="hrow">${lab?`<span class="cd">${E(lab)}</span>`:''}${edit?hin('Título de la sección'):`<h3>${E(b.text)||'<em>Sin título</em>'}</h3>`}</div><span class="cnt" data-cnt="${b.id}"></span></header><div class="bar" data-bar="${b.id}"><i></i></div></section>`;
+  else if(b.t==='h2'||b.t==='h3'){const d=!!b.done;h=`<article class="st k-${b.t}${d?' done':''}"><label class="ck"><input type="checkbox"${d?' checked':''} onchange="toggleDone('${b.id}',this.checked)" aria-label="Completar"><i></i></label><div class="sb"><div class="sm">${lab?`<span class="cd">${b.t==='h2'?'Paso':'Sub-paso'} ${E(lab)}</span>`:`<span class="cd">${b.t==='h2'?'Paso':'Sub-paso'}</span>`}</div>${edit?hin(b.t==='h2'?'Título del paso':'Título del sub-paso'):`<h4>${E(b.text)||'<em>Sin título</em>'}</h4>`}</div></article>`}
+  else if(b.t==='q')h=`<div class="q"><div class="sm"><span class="cd">${E(lab||'Pregunta')}</span>${tag('Pregunta','purple')}</div>${edit?hin('Escribe la pregunta'):`<h4>${inl(b.text)||'<em>Sin enunciado</em>'}</h4>`}<textarea class="tx auto" rows="4" placeholder="Redacta tu respuesta…" oninput="setF('${b.id}','ans',this.value);ar(this)">${E(b.ans)}</textarea></div>`;
+  else if(b.t==='p')h=edit?`<textarea class="tx auto" rows="3" placeholder="Texto normal (admite Markdown: **negrita**, \`código\`, listas y tablas)" oninput="setF('${b.id}','text',this.value);ar(this)">${E(b.text)}</textarea><p class="hint">Admite Markdown: **negrita**, \`código\`, listas y tablas.</p>`:(b.text.trim()?`<div class="txt">${md(b.text)}</div>`:'');
+  else if(b.t==='code')h=edit?`<label class="lb">Etiqueta (opcional, ej. «R1», «Switch», «PC0»)</label><input type="text" class="hin" value="${E(b.lang)}" oninput="setF('${b.id}','lang',this.value)"><textarea class="tx mono auto" rows="4" placeholder="Comandos o salida de consola" oninput="setF('${b.id}','text',this.value);ar(this)" style="margin-top:6px">${E(b.text)}</textarea>`:codeHtml(b);
+  else if(b.t==='img')h=evHtml(b,ctx);
+  return`<div class="blk" id="${b.id}" data-b="${b.id}" style="--ind:${ind}px">${ctl}${h}${insertFor===b.id?insBar(b.id):''}</div>`}
+function mainHtml(){const n=nums(),ctx={lab:n.lab,ev:n.ev,ind:{}};let cur=0;
+  doc.blocks.forEach(b=>{if(b.t==='h1'){cur=0;ctx.ind[b.id]=0}else if(b.t==='h2'){cur=32;ctx.ind[b.id]=0}else if(b.t==='h3'){cur=64;ctx.ind[b.id]=32}else ctx.ind[b.id]=cur});
+  const info=`<div class="info"><label class="lb" for="i-title">Nombre de la práctica</label><input type="text" id="i-title" value="${E(doc.title)}" placeholder="Ej. Configuración de DHCPv4 con relay" oninput="setDoc('title',this.value)">
+    <div class="fl"><div><label class="lb" for="i-name">Estudiante / equipo</label><input type="text" id="i-name" value="${E(doc.student)}" oninput="setDoc('student',this.value)"></div><div><label class="lb" for="i-group">Matrícula / grupo / materia</label><input type="text" id="i-group" value="${E(doc.group)}" oninput="setDoc('group',this.value)"></div></div></div>`;
+  const body=doc.blocks.length?doc.blocks.map(b=>blockHtml(b,ctx)).join(''):`<div class="empty"><p><b>La práctica está vacía.</b></p><p>Usa los botones de abajo para añadir una sección, un paso, texto o una imagen.<br>También puedes pegar una captura con <kbd>Ctrl</kbd> + <kbd>V</kbd> y se creará un bloque de imagen.</p>${edit?'':'<p><button class="btn ter" onclick="toggleEdit()">Editar estructura</button></p>'}</div>`;
+  const hint=edit?`<div class="note"><b>Modo edición.</b> Cambia el tipo de cada bloque, reordénalo (las flechas mueven un título junto con su contenido), inserta bloques debajo o elimínalo. Al terminar pulsa «Terminar edición».</div>`:'';
+  return info+hint+body}
+function render(){if(!doc)return;const y=scrollY;$('#main').innerHTML=mainHtml();
+  const ab=$('#addbar');if(edit){ab.style.display='flex';ab.innerHTML=`<span class="mu">Añadir al final:</span>${insBar(null).replace('class="ins"','style="display:contents"')}<button class="btn ghost sm" onclick="$('#add-imgs').click()">${ic('ul')} Subir imágenes</button><button class="btn ghost sm" onclick="undo()">${ic('undo')} Deshacer</button>`}else{ab.style.display='none'}
+  renderSide();updateCounts();hdr();$$('textarea.auto').forEach(ar);scrollTo(0,y);
+  if(focusId){const e=document.getElementById(focusId);focusId=null;if(e){const f=e.querySelector('input[type=text],textarea');if(f)f.focus({preventScroll:true});e.scrollIntoView({block:'center',behavior:'smooth'})}}
+  else if(reveal){const e=document.getElementById(reveal);reveal=null;if(e)e.scrollIntoView({block:'nearest',behavior:'smooth'})}}
+function renderSide(){if(!doc)return;const s=stats(),g=grp(),n=nums();
+  const items=doc.blocks.filter(b=>LV[b.t]).map(b=>{const lab=n.lab[b.id]?n.lab[b.id]+' ':'',txt=E(lab+(b.text||'Sin título'));
+    if(b.t==='h1'){const v=g[b.id]||[0,0];return`<button class="n1" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c${v[1]&&v[0]===v[1]?' ok':''}">${v[1]?v[0]+'/'+v[1]:''}</span></button>`}
+    return`<button class="n${LV[b.t]}" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c ok">${b.done?'✓':''}</span></button>`}).join('')||'<p class="none">Aún no hay secciones ni pasos.</p>';
+  const bk=meta.dirty?['w','Cambios sin guardar en un .json']:meta.backupAt?['g','Progreso guardado '+new Date(meta.backupAt).toLocaleString('es-MX',{dateStyle:'short',timeStyle:'short'})]:['','Aún no has guardado un .json'];
+  $('#side').innerHTML=`<div class="pan"><div class="big">${s.pct}<small>%</small></div><p class="mu">avance total</p>${meter('Pasos',s.sd,s.st)}${meter('Evidencias',s.ed,s.et)}${meter('Preguntas',s.qd,s.qt)}
+  <div class="bk"><span class="dot ${bk[0]}"></span><span>${bk[1]}</span></div><button class="btn ter block" onclick="saveProgress()"><span>Guardar progreso</span>${ic('dl')}</button></div>
+  <div class="pan"><label class="chk"><input type="checkbox"${doc.numbering?' checked':''} onchange="setNum(this.checked)"> Numeración automática de títulos</label><button class="btn ghost sm" style="margin-top:12px" onclick="downloadGuide()">${ic('dl')} Guía de formato para IA</button></div><nav class="nv">${items}</nav>`}
+function goTo(id){$('#side').classList.remove('open');const e=document.getElementById(id);if(e){e.scrollIntoView({behavior:'smooth',block:'start'});e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash')}}
+
+/* ================= imágenes ================= */
+function readImg(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const url=fr.result;if(file.size<1.2e6||/gif|svg/.test(file.type))return res(url);
+  const im=new Image();im.onload=()=>{const M=2200;if(im.width<=M)return res(url);const c=document.createElement('canvas');c.width=M;c.height=Math.round(im.height*M/im.width);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL(file.type==='image/jpeg'?'image/jpeg':'image/png',.92))};im.onerror=()=>res(url);im.src=url};fr.onerror=rej;fr.readAsDataURL(file)})}
+async function setImage(id,file){if(!file||!file.type.startsWith('image/')){showToast('Selecciona o pega un archivo de imagen válido.','warning');return false}
+  const old=images[id];if(old&&old.url)URL.revokeObjectURL(old.url);const dataUrl=await readImg(file);
+  await putImg({id,dataUrl,name:file.name||'captura.png',updatedAt:new Date().toLocaleString('es-MX',{hour12:false})});return true}
+async function fillFiles(id,files,mode){const fs=[...files].filter(f=>f.type.startsWith('image/'));if(!fs.length)return showToast('Selecciona o pega un archivo de imagen válido.','warning');snap();
+  let after=id,first=true;if(mode==='new'){after=id;}
+  for(const f of fs){let target;if(mode!=='new'&&first){target=id}else{const nb=mk('img');const i=mode==='end'?doc.blocks.length:idx(after)+1;doc.blocks.splice(i,0,nb);target=nb.id}
+    first=false;if(await setImage(target,f))after=target}
+  active=after;lastPos=after;dirty();render();showToast(fs.length>1?fs.length+' imágenes añadidas.':'Imagen guardada.','success')}
+function pickFile(id,inp){const f=[...inp.files];inp.value='';if(f.length)fillFiles(id,f)}
+function addFiles(inp){const f=[...inp.files];inp.value='';if(f.length)fillFiles(null,f,'end')}
+function dropImg(id,e){e.preventDefault();e.currentTarget.classList.remove('over');fillFiles(id,e.dataTransfer.files)}
+function dragZ(e,on){e.preventDefault();e.currentTarget.classList.toggle('over',!!on)}
+async function pasteBtn(id){active=id;lastPos=id;try{for(const it of await navigator.clipboard.read()){const t=it.types.find(x=>x.startsWith('image/'));if(t){const b=await it.getType(t);return fillFiles(id,[new File([b],'captura.png',{type:t})])}}showToast('No hay imagen en el portapapeles.','warning')}catch(e){showToast('Haz clic en la tarjeta y presiona Ctrl+V para pegar tu captura.','info')}}
+async function rmImg(id){await delImg(id);dirty();render()}
+function imgExt(r){return((r.dataUrl.match(/^data:image\/(\w+)/)||[])[1]||'png').replace('jpeg','jpg')}
+function downloadImg(id){const r=images[id];if(!r)return;const n=nums(),b=get(id);downloadBlob(new Blob([Uint8Array.from(atob(r.dataUrl.split(',')[1]),c=>c.charCodeAt(0))],{type:'image/'+imgExt(r)}),`${n.ev[id]}-${slug(b.cap)||'captura'}.${imgExt(r)}`)}
+function openLb(id){const r=images[id],b=get(id);$('#lb-t').textContent=(nums().ev[id])+(b.cap?' · '+b.cap:'');$('#lb-img').src=r.url;$('#lb-dl').onclick=()=>downloadImg(id);openOv('lb-ov')}
+document.addEventListener('paste',e=>{if(!doc||$('#start').classList.contains('on'))return;const items=[...(e.clipboardData?.items||[])];const it=items.find(i=>i.kind==='file'&&i.type.startsWith('image/'));if(!it)return;
+  if(/^(TEXTAREA|INPUT)$/.test(e.target.tagName)&&items.some(i=>i.kind==='string'&&i.type==='text/plain'))return;e.preventDefault();
+  const f=it.getAsFile(),a=active&&get(active);
+  if(a&&a.t==='img'&&!images[a.id])fillFiles(a.id,[f]);else if(lastPos&&get(lastPos))fillFiles(lastPos,[f],'new');else fillFiles(null,[f],'end')});
+function track(e){const c=e.target.closest&&e.target.closest('[data-b]');if(!c)return;lastPos=c.dataset.b;const b=get(lastPos);const na=b&&b.t==='img'?lastPos:null;
+  if(na!==active){active=na;$$('.ev.act').forEach(x=>x.classList.remove('act'));if(na)c.querySelector('.ev')?.classList.add('act')}}
+document.addEventListener('click',track);document.addEventListener('focusin',track);
+
+/* ================= plantilla Markdown ================= */
+function parseTemplate(src,fname){src=src.replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');const info={title:'',student:'',group:''};let lines=src.split('\n');
+  if(lines[0].trim()==='---'){let j=1;while(j<lines.length&&!/^(---|\.\.\.)\s*$/.test(lines[j]))j++;
+    if(j<lines.length){for(let k=1;k<j;k++){const m=lines[k].match(/^\s*([\wáéíóúñÁÉÍÓÚ]+)\s*:\s*(.*)$/);if(!m)continue;const key=m[1].toLowerCase(),val=m[2].trim().replace(/^["']|["']$/g,'');
+      if(/^(titulo|título|title|practica|práctica)$/.test(key))info.title=val;else if(/^(estudiante|alumno|autor|author|nombre|name|student)$/.test(key))info.student=val;else if(/^(grupo|materia|group|matricula|matrícula|curso)$/.test(key))info.group=val}
+      lines=lines.slice(j+1)}}
+  const blocks=[],imgs={};let para=[];const flush=()=>{if(para.length){const t=para.join('\n').trim();if(t)blocks.push(mk('p',{text:t}));para=[]}};
+  const quote=n=>{let k=n+1;while(k<lines.length&&!lines[k].trim())k++;const buf=[];while(k<lines.length&&/^\s*>/.test(lines[k])){buf.push(lines[k].replace(/^\s*>\s?/,''));k++}return buf.length?[buf.join('\n').trim(),k-1]:['',n]};
+  for(let n=0;n<lines.length;n++){const l=lines[n];let m;
+    if((m=l.match(/^\s*(`{3,}|~{3,})\s*([^\s`]*)\s*$/))){flush();const ch=m[1][0],buf=[];n++;while(n<lines.length&&!(/^\s*(`{3,}|~{3,})\s*$/.test(lines[n])&&lines[n].trim()[0]===ch)){buf.push(lines[n]);n++}blocks.push(mk('code',{text:buf.join('\n'),lang:m[2]||''}));continue}
+    if((m=l.match(/^(#{1,6})\s+(.+?)\s*#*\s*$/))){flush();const lv=m[1].length,t=m[2];
+      if(lv<=3)blocks.push(mk(['h1','h2','h3'][lv-1],{text:t}));
+      else if(lv===4){const[a,e]=quote(n);n=e;blocks.push(mk('q',{text:t,ans:/^_?sin respuesta registrada\._?$/i.test(a)?'':a}))}
+      else blocks.push(mk('p',{text:'**'+t+'**'}));continue}
+    if((m=l.match(/^\s*!\[([^\]]*)\]\(([^)]*)\)\s*$/))){flush();const b=mk('img',{cap:m[1].trim()});const u=m[2].trim();
+      if(/^data:image\//.test(u))imgs[b.id]={id:b.id,dataUrl:u,name:'imagen',updatedAt:''};const[a,e]=quote(n);if(a){b.note=a.replace(/^\*\*Observaci[oó]n t[eé]cnica:\*\*\s*/i,'');n=e}blocks.push(b);continue}
+    if((m=l.match(/^\s*_?\*?[\[<]\s*(?:IMAGEN|IMG|CAPTURA|EVIDENCIA)(?:\s+PENDIENTE)?\s*:\s*(.+?)\s*[\]>]\*?_?\s*$/i))){flush();blocks.push(mk('img',{cap:m[1]}));continue}
+    if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(l)){flush();continue}
+    if(!l.trim()){flush();continue}
+    para.push(l)}
+  flush();if(!info.title)info.title=(fname||'').replace(/\.(md|markdown|txt)$/i,'').replace(/[_]+/g,' ').trim();
+  const hs=blocks.filter(b=>LV[b.t]),numd=hs.filter(b=>/^(?:(?:paso|parte|secci[oó]n|subsecci[oó]n|fase|tarea|ejercicio|actividad)\s*)?\d+(?:[.\-]\d+)*[.):]?(?:\s|$)/i.test(b.text)).length;
+  return{info,blocks,imgs,numbering:!(hs.length&&numd/hs.length>=.5)}}
+async function newDoc(d,imgs){await clearImgs();doc=d;for(const id in imgs||{})await putImg(imgs[id]);undoStack=[];active=null;lastPos=null;insertFor=null;meta={backupAt:null,dirty:false};persistDoc();persistMeta()}
+function guard(fn){if(doc&&doc.blocks.length)ask('¿Reemplazar la práctica actual?','Se sustituirá el contenido actual, incluidas sus imágenes. Si no has guardado un .json no podrás recuperarlo.','Reemplazar',fn);else fn()}
+const sv=id=>$('#'+id).value.trim();
+async function useTemplateText(text,fname){const t=parseTemplate(text,fname);if(!t.blocks.length)return showToast('La plantilla no contiene secciones ni contenido reconocible.','warning');
+  guard(async()=>{await newDoc({title:sv('s-title')||t.info.title,student:sv('s-name')||t.info.student||(doc?doc.student:''),group:sv('s-group')||t.info.group||(doc?doc.group:''),numbering:t.numbering,blocks:t.blocks},t.imgs);
+    edit=false;hideStart();render();const s=stats();showToast(`Plantilla cargada: ${t.blocks.filter(b=>b.t==='h1').length} secciones, ${s.st} pasos, ${s.et} imágenes y ${s.qt} preguntas por completar.`,'success')})}
+function onTplInput(ev){const f=ev.target.files[0];ev.target.value='';if(f)f.text().then(t=>useTemplateText(t,f.name))}
+function dragO(e,on){e.preventDefault();e.currentTarget.classList.toggle('over',!!on)}
+function dropO(e){e.preventDefault();e.currentTarget.classList.remove('over');const f=e.dataTransfer.files[0];if(!f)return;if(/\.json$/i.test(f.name))f.text().then(loadProgressText);else f.text().then(t=>useTemplateText(t,f.name))}
+function startBlank(){const t=sv('s-title');if(!t){showToast('Escribe el nombre de la práctica.','warning');$('#s-title').focus();return}
+  guard(async()=>{await newDoc({title:t,student:sv('s-name'),group:sv('s-group'),numbering:true,blocks:[]},{});edit=true;hideStart();render()})}
+const F='```';
+const SAMPLE=['---','titulo: Configuración de DHCPv4 con relay','estudiante: ','grupo: ','---','','# Topología y direccionamiento','','Arma la topología con tres routers y dos switches y verifica los enlaces entre ellos.','',
+'![Topología completa en Packet Tracer](topologia.png)','','| Dispositivo | Interfaz | Dirección IP | Máscara |','|---|---|---|---|','| R1 | G0/0 | 192.168.10.1 | 255.255.255.0 |','| R2 | G0/1 | 10.0.0.2 | 255.255.255.252 |','',
+'## Configurar R1','','### Asignar direcciones a las interfaces','',F+' R1','enable','configure terminal','interface g0/0','ip address 192.168.10.1 255.255.255.0','no shutdown',F,'','[IMAGEN: Salida de show ip interface brief en R1]','',
+'#### ¿Qué estado muestran las interfaces después de aplicar no shutdown?','','## Configurar el servidor DHCP en R2','','Crea el pool y excluye las direcciones del gateway.','',F+' R2','ip dhcp excluded-address 192.168.10.1 192.168.10.10','ip dhcp pool LAN-R1','network 192.168.10.0 255.255.255.0','default-router 192.168.10.1',F,'',
+'# Verificación','','## Comprobar la asignación en la PC','','![Resultado de ipconfig /all en PC0](ipconfig.png)','','#### ¿Qué función cumple el comando ip helper-address?',''].join('\n');
+
+const GUIDE=[
+'# Guía de formato de plantilla — Framework de prácticas de Packet Tracer','',
+'> **Instrucciones para la IA que lea este archivo.** El usuario te dará una práctica de Cisco Packet Tracer (PDF, texto, imágenes o un borrador). Tu tarea es convertirla en **un único archivo Markdown (.md)** que siga exactamente el formato descrito aquí. El framework HTML del usuario lo leerá y mostrará la práctica ya estructurada, con casillas por paso, cuadros de respuesta y espacios para subir capturas de pantalla (evidencias).','',
+'## 1. Elementos del formato','',
+'| En el .md | El framework lo muestra como |','|---|---|',
+'| Encabezado YAML al inicio (§---§) con §titulo:§, §estudiante:§, §grupo:§ | Datos de la práctica (opcional; deja §estudiante§ y §grupo§ vacíos) |',
+'| §# Título§ | **Sección** (agrupa pasos; muestra barra de avance) |',
+'| §## Título§ | **Paso** (con casilla de completado) |',
+'| §### Título§ | **Sub-paso** (con casilla de completado) |',
+'| §#### Pregunta§ | **Pregunta** con cuadro de respuesta |',
+'| Párrafos, listas (§- §, §1. §), **negrita**, §código§ y tablas Markdown | Texto normal |',
+'| Bloque delimitado con tres comillas invertidas | Bloque de comandos con botón «Copiar» |',
+'| §[IMAGEN: descripción]§ o §![descripción](x)§ | Espacio para subir o pegar una captura (evidencia) |','',
+'## 2. Reglas obligatorias','',
+'1. Entrega **solo el contenido del archivo .md**, sin explicaciones antes ni después. Si tu interfaz lo permite, entrégalo como archivo descargable; si no, en un único bloque de código Markdown.',
+'2. Usa **solo** los niveles §#§, §##§, §###§ y §####§. No uses §#####§ ni §######§, ni HTML.',
+'3. Jerarquía: §#§ = parte o sección grande de la práctica; §##§ = paso principal; §###§ = sub-paso concreto dentro de un paso; §####§ = pregunta de análisis. No saltes niveles (no pongas §###§ sin un §##§ previo).',
+'4. **No numeres los títulos a mano** (nada de «1.», «Paso 1.2»…); el framework los numera solo. Si la práctica original ya los numera de forma importante, mantenlos en el texto del título y se respetarán.',
+'5. **Capturas de pantalla:** cada vez que la práctica pida evidencia, un resultado, una topología o una verificación, coloca una línea §[IMAGEN: descripción]§ **justo después** del paso o sub-paso que la requiere. La descripción debe decir qué debe verse (dispositivo, comando y resultado esperado). Ejemplo: §[IMAGEN: Salida de show ip interface brief en R1 con G0/0 en up/up]§. Nunca pongas rutas o nombres de archivo reales.',
+'6. **Comandos:** colócalos en bloques de código, **uno por dispositivo y modo de trabajo**, con el nombre del dispositivo como etiqueta tras las comillas (por ejemplo §R1§, §SW1§, §PC0§). Incluye solo lo que se debe teclear, en orden, uno por línea. La salida esperada o las explicaciones van como texto normal, fuera del bloque.',
+'7. **Tablas** (direccionamiento IP, VLAN, puertos, credenciales de laboratorio…): como tablas Markdown, con la fila separadora §|---|---|§. Cópialas con exactitud.',
+'8. **Preguntas:** una por encabezado §####§ y con el enunciado completo. **No escribas la respuesta** (el estudiante la redactará), a menos que el usuario te lo pida; en ese caso ponla debajo como cita con §> §.',
+'9. Cada paso debe describir **una acción verificable**. Redacta en imperativo y de forma breve («Configura la interfaz G0/0 de R1»). Si un paso tiene varias acciones, divídelo en sub-pasos.',
+'10. **Fidelidad:** no inventes direcciones, nombres de dispositivos, interfaces ni comandos. Si hay datos que se contradicen en la práctica original (por ejemplo, el texto dice R1/R2 y la tabla R0/R1), conserva lo que dice el documento y añade una línea de texto con **Nota:** señalando la discrepancia.',
+'11. Escribe en español, salvo los comandos y los nombres técnicos.','',
+'## 3. Lista de verificación antes de entregar','',
+'- [ ] El archivo empieza con el encabezado YAML (o directamente con §#§).',
+'- [ ] Solo hay encabezados de nivel 1 a 4.',
+'- [ ] Cada captura requerida tiene su línea §[IMAGEN: …]§ con descripción útil.',
+'- [ ] Cada bloque de comandos tiene etiqueta de dispositivo y está bien cerrado.',
+'- [ ] Las tablas tienen fila separadora y los datos coinciden con la práctica original.',
+'- [ ] Las preguntas están como §####§ y sin respuesta.',
+'- [ ] No hay HTML, ni rutas de imágenes, ni títulos numerados a mano.','',
+'## 4. Ejemplo completo','',
+'Este ejemplo muestra cómo debe verse el archivo que entregues:','',
+'````markdown','---','titulo: Configuración de DHCPv4 con relay','estudiante: ','grupo: ','---','',
+'# Topología y direccionamiento','','Arma la topología con tres routers y dos switches y verifica los enlaces entre ellos.','',
+'[IMAGEN: Topología completa en Packet Tracer con todos los dispositivos conectados]','',
+'| Dispositivo | Interfaz | Dirección IP | Máscara |','|---|---|---|---|','| R1 | G0/0 | 192.168.10.1 | 255.255.255.0 |','| R2 | G0/1 | 10.0.0.2 | 255.255.255.252 |','',
+'## Configurar R1','','### Asignar direcciones a las interfaces','','Configura la interfaz G0/0 y actívala.','',
+'```R1','enable','configure terminal','interface g0/0','ip address 192.168.10.1 255.255.255.0','no shutdown','```','',
+'[IMAGEN: Salida de show ip interface brief en R1 con G0/0 en up/up]','',
+'#### ¿Qué estado muestran las interfaces después de aplicar no shutdown?','',
+'## Configurar el servidor DHCP en R2','','Crea el pool y excluye las direcciones del gateway.','',
+'```R2','ip dhcp excluded-address 192.168.10.1 192.168.10.10','ip dhcp pool LAN-R1','network 192.168.10.0 255.255.255.0','default-router 192.168.10.1','```','',
+'# Verificación','','## Comprobar la asignación en la PC','','[IMAGEN: Resultado de ipconfig /all en PC0 con IP asignada por DHCP]','',
+'#### ¿Qué función cumple el comando ip helper-address?','','````'
+].join('\n').replace(/§/g,'`');
+function downloadGuide(){downloadBlob(new Blob([GUIDE],{type:'text/markdown;charset=utf-8'}),'GUIA-FORMATO-PLANTILLA.md')}
+function useSample(){useTemplateText(SAMPLE,'Práctica de ejemplo.md')}
+function downloadSample(){downloadBlob(new Blob([SAMPLE],{type:'text/markdown;charset=utf-8'}),'plantilla-ejemplo.md')}
+function showStart(){$('#o-cont').style.display=doc?'':'none';$('#st-x').style.display=doc?'':'none';
+  if(doc){const s=stats();$('#o-cont-t').textContent=`«${doc.title||'Práctica sin nombre'}» · ${s.T?s.pct+'% de avance':'sin contenido aún'}`}$('#start').classList.add('on');scrollTo(0,0)}
+function hideStart(){$('#start').classList.remove('on');['s-title','s-name','s-group'].forEach(i=>$('#'+i).value='')}
+
+/* ================= progreso .json ================= */
+function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+function saveProgress(){if(!doc)return;try{const used={};doc.blocks.forEach(b=>{if(b.t==='img'&&images[b.id]){const{url,...r}=images[b.id];used[b.id]=r}});
+  const p={app:'pt-framework',version:1,exportedAt:new Date().toISOString(),doc,images:used};
+  downloadBlob(new Blob([JSON.stringify(p)],{type:'application/json'}),`Progreso-${slug(doc.title)||'practica'}-${new Date().toISOString().slice(0,10)}.json`);
+  meta={backupAt:p.exportedAt,dirty:false};persistMeta();ui();showToast('Progreso guardado en un archivo .json.','success')}catch(e){console.error(e);showToast('No se pudo generar el archivo .json.','error')}}
+function onJsonInput(ev){const f=ev.target.files[0];ev.target.value='';if(f)f.text().then(loadProgressText)}
+function loadProgressText(txt){let p;try{p=JSON.parse(txt);if(!p||!p.doc||!Array.isArray(p.doc.blocks))throw 0}catch(e){return showToast('Ese archivo no es un progreso válido de este framework.','error')}
+  guard(async()=>{const d=normDoc(p.doc),imgs={};for(const b of d.blocks){const r=p.images&&p.images[b.id];if(b.t==='img'&&r&&r.dataUrl)imgs[b.id]={...r,id:b.id}}
+    await newDoc(d,imgs);meta={backupAt:p.exportedAt||null,dirty:false};persistMeta();edit=!d.blocks.length;hideStart();render();const s=stats();showToast(`Progreso cargado: ${s.sd}/${s.st} pasos, ${s.ed}/${s.et} evidencias.`,'success')})}
+
+/* ================= exportar reporte ================= */
+    const REPORT_THEMES = [
+      { id:'carbon', name:'IBM Carbon', v:{bg:'#f4f4f4',paper:'#ffffff',ink:'#161616',muted:'#525252',accent:'#0f62fe',band:'#161616',onband:'#f4f4f4',onaccent:'#ffffff',line:'#e0e0e0',soft:'#f4f4f4',font:'"IBM Plex Sans","Helvetica Neue",Arial,sans-serif',head:'"IBM Plex Sans","Helvetica Neue",Arial,sans-serif',radius:'0px',ok:'#198038',warn:'#8e6a00'} },
+      { id:'aws', name:'Consola AWS', v:{bg:'#eef2f7',paper:'#ffffff',ink:'#0f172a',muted:'#475569',accent:'#ff9900',band:'#232f3e',onband:'#ffffff',onaccent:'#111827',line:'#cbd5e1',soft:'#f1f5f9',font:'"Segoe UI",Roboto,Arial,sans-serif',head:'"Segoe UI",Roboto,Arial,sans-serif',radius:'12px',ok:'#047857',warn:'#b45309'} },
+      { id:'editorial', name:'Editorial', v:{bg:'#efe8da',paper:'#fffdf8',ink:'#2b2118',muted:'#6b5b4b',accent:'#9b2c2c',band:'#7f1d1d',onband:'#fff7ed',onaccent:'#ffffff',line:'#decfb8',soft:'#f7f0e2',font:'Georgia,"Times New Roman",serif',head:'Georgia,"Times New Roman",serif',radius:'4px',ok:'#166534',warn:'#9a3412'} },
+      { id:'terminal', name:'Terminal', v:{bg:'#050a06',paper:'#0b140d',ink:'#d1fae5',muted:'#86c9a0',accent:'#22c55e',band:'#052e16',onband:'#bbf7d0',onaccent:'#04130a',line:'#14532d',soft:'#0f2416',font:'ui-monospace,Consolas,"Courier New",monospace',head:'ui-monospace,Consolas,"Courier New",monospace',radius:'2px',ok:'#4ade80',warn:'#fbbf24'} },
+      { id:'nordic', name:'Nórdico', v:{bg:'#f8fafc',paper:'#ffffff',ink:'#1e293b',muted:'#64748b',accent:'#0284c7',band:'#e0f2fe',onband:'#0c4a6e',onaccent:'#ffffff',line:'#e2e8f0',soft:'#f1f5f9',font:'"Helvetica Neue",Arial,sans-serif',head:'"Helvetica Neue",Arial,sans-serif',radius:'8px',ok:'#0f766e',warn:'#b45309'} },
+      { id:'sunset', name:'Atardecer', v:{bg:'#fff1e6',paper:'#fffaf5',ink:'#431407',muted:'#9a3412',accent:'#ea580c',band:'linear-gradient(135deg,#f97316,#db2777)',onband:'#ffffff',onaccent:'#ffffff',line:'#fed7aa',soft:'#ffedd5',font:'"Trebuchet MS","Segoe UI",sans-serif',head:'"Trebuchet MS","Segoe UI",sans-serif',radius:'16px',ok:'#15803d',warn:'#c2410c'} },
+      { id:'forest', name:'Bosque', v:{bg:'#e8f0ea',paper:'#fbfdfb',ink:'#14291a',muted:'#4d6b57',accent:'#15803d',band:'#14532d',onband:'#dcfce7',onaccent:'#ffffff',line:'#c4dccb',soft:'#eef6f0',font:'Cambria,Georgia,serif',head:'"Segoe UI",Arial,sans-serif',radius:'10px',ok:'#166534',warn:'#a16207'} },
+      { id:'violet', name:'Violeta', v:{bg:'#f1edff',paper:'#ffffff',ink:'#1e1b4b',muted:'#5b5690',accent:'#7c3aed',band:'linear-gradient(135deg,#4c1d95,#7c3aed)',onband:'#ffffff',onaccent:'#ffffff',line:'#ddd6fe',soft:'#f5f3ff',font:'Verdana,"Segoe UI",sans-serif',head:'Verdana,"Segoe UI",sans-serif',radius:'14px',ok:'#047857',warn:'#b45309'} },
+      { id:'blueprint', name:'Blueprint', v:{bg:'#082038',paper:'#0d3358',ink:'#e0f2fe',muted:'#93c5fd',accent:'#fde047',band:'#061a2f',onband:'#e0f2fe',onaccent:'#082038',line:'#1d5185',soft:'#0a2a4a',font:'"Courier New",ui-monospace,monospace',head:'"Courier New",ui-monospace,monospace',radius:'0px',ok:'#6ee7b7',warn:'#fcd34d'} }
+    ];
+
+const EXPORT_LAYOUTS={head:['banner','rule','center'],card:['box','flat','shadow'],table:['zebra','lines']};
+const pickRandom=a=>a[Math.floor(Math.random()*a.length)];
+function openExport(){if(!doc)return;$('#ex-title').value=doc.title||'';$('#ex-name').value=doc.student||'';$('#ex-group').value=doc.group||'';const sel=$('#export-theme');
+  if(!sel.options.length)sel.innerHTML='<option value="random">Aleatorio (distinto en cada reporte)</option>'+REPORT_THEMES.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  const s=stats();$('#export-summary-pill').textContent=`Incluye ${s.sd}/${s.st} pasos completados, ${s.ed}/${s.et} evidencias y ${s.qd}/${s.qt} preguntas respondidas.`;openOv('export-modal')}
+function chooseStyle(){const sel=$('#export-theme').value;let theme,lay;
+  if(sel==='random'){let last='';try{last=localStorage.getItem('pt_last_theme')||''}catch(e){}theme=pickRandom(REPORT_THEMES.filter(t=>t.id!==last));lay={head:pickRandom(EXPORT_LAYOUTS.head),card:pickRandom(EXPORT_LAYOUTS.card),table:pickRandom(EXPORT_LAYOUTS.table)}}
+  else{theme=REPORT_THEMES.find(t=>t.id===sel)||REPORT_THEMES[0];lay={head:'banner',card:'box',table:'zebra'}}
+  try{localStorage.setItem('pt_last_theme',theme.id)}catch(e){}return{theme,lay}}
+function collect(){doc.title=$('#ex-title').value.trim();doc.student=$('#ex-name').value.trim();doc.group=$('#ex-group').value.trim();persistDoc();hdr();
+  const n=nums();let sec='';const items=doc.blocks.map(b=>{if(b.t==='h1')sec=b.text;return{b,lab:n.lab[b.id]||'',ev:n.ev[b.id]||'',sec,img:images[b.id]||null}});
+  return{title:doc.title||'Práctica de Packet Tracer',student:doc.student,group:doc.group,items,st:stats(),nowStr:new Date().toLocaleString('es-MX',{dateStyle:'long',timeStyle:'short'})}}
+const REPORT_BASE=`*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;background:var(--bg)}
+body{font-family:var(--font);color:var(--ink);line-height:1.55;padding:32px 18px}
+.wrap{max-width:960px;margin:0 auto;background:var(--paper);padding-bottom:36px;border-radius:var(--radius);border:1px solid var(--line)}
+.body{padding:4px 40px 0}
+.h{padding:34px 40px 26px}
+.kick{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.h h1{margin:8px 0 12px;font-family:var(--head);font-size:28px;line-height:1.2}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px}
+.chips{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.chip{font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px;border:1px solid currentColor}
+.h-banner .h{background:var(--band);color:var(--onband);border-radius:var(--radius) var(--radius) 0 0}
+.h-rule .h{margin:34px 40px 0;padding:0 0 22px 22px;border-left:8px solid var(--accent);border-bottom:1px solid var(--line)}
+.h-center .h{text-align:center;margin:34px 40px 0;padding:0 0 24px;border-bottom:4px double var(--accent)}
+.h-center .meta,.h-center .chips{justify-content:center}
+.h-rule .kick,.h-center .kick{color:var(--accent)}
+.h-rule .meta,.h-center .meta{color:var(--muted)}
+.h-rule .chip,.h-center .chip{color:var(--accent)}
+h2{font-family:var(--head);font-size:20px;margin:32px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--soft);text-align:left}
+th,td{padding:8px 10px;border:1px solid var(--line)}
+.t-zebra tbody tr:nth-child(even){background:var(--soft)}
+.t-lines th,.t-lines td{border:0;border-bottom:1px solid var(--line)}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+.ok{color:var(--ok);font-weight:700}.pend{color:var(--warn);font-weight:700}
+.card{border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:20px;background:var(--paper);break-inside:avoid}
+.c-flat .card{border:0;border-left:4px solid var(--accent);border-radius:0;background:var(--soft)}
+.c-shadow .card{border:0;box-shadow:0 6px 22px rgba(0,0,0,.16)}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.tag{background:var(--accent);color:var(--onaccent);padding:3px 9px;border-radius:5px;font-weight:700;font-size:12px}
+.pill{font-size:12px;font-weight:700;background:var(--soft);padding:3px 10px;border-radius:999px}
+.c-flat .pill{background:var(--paper)}
+.card h3{margin:0 0 8px;font-family:var(--head);font-size:16px}
+.muted{color:var(--muted);font-size:13px;margin:0 0 10px}
+.shot{text-align:center;background:var(--soft);border-radius:8px;padding:10px;margin:10px 0}
+.c-flat .shot{background:var(--paper)}
+.shot img{max-width:100%;max-height:480px;border-radius:4px}
+.shot small{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.empty{padding:22px;text-align:center;border:2px dashed var(--line);border-radius:8px;color:var(--muted);font-size:13px;margin:10px 0}
+.note{border-left:4px solid var(--accent);background:var(--soft);padding:10px 12px;font-size:13px;margin-top:10px}
+.c-flat .note{background:var(--paper)}
+.ans{background:var(--soft);border-radius:8px;padding:12px;font-size:13px}
+.c-flat .ans{background:var(--paper)}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px}
+@media print{@page{size:A4;margin:10mm}body{padding:0;background:var(--paper)}.wrap{border:0;border-radius:0;max-width:none;padding-bottom:0}.body{padding:0 4px}.h{padding:18px 20px 14px!important;margin:0!important}.h h1{font-size:22px;margin:4px 0 8px}h2{font-size:16px;margin:16px 0 8px;break-after:avoid}.card{break-inside:auto;padding:10px 12px;margin-bottom:10px}.card h3{break-after:avoid;font-size:14px;margin:0 0 4px}.card-top{break-after:avoid;margin-bottom:4px}.muted{margin:0 0 6px;font-size:12px}.shot{break-inside:avoid;padding:6px;margin:6px 0}.shot img{max-height:105mm;max-width:100%;width:auto}.note,.ans{break-inside:avoid}table{font-size:11px}th,td{padding:4px 8px}.empty{padding:10px;margin:6px 0}footer{margin-top:12px}}
+@media(max-width:640px){.body{padding:4px 18px 0}.h{padding:26px 20px 20px}}`;
+const REPORT_EXTRA=`h3{font-family:var(--head);font-size:17px;margin:24px 0 8px}h4{font-family:var(--head);font-size:15px;margin:18px 0 6px}.num{color:var(--accent);font-family:ui-monospace,Consolas,monospace;font-size:.85em}
+.txt{margin:8px 0}.txt p{margin:0 0 10px}.txt ul,.txt ol{padding-left:22px;margin:6px 0 10px}.txt .tbl{overflow-x:auto;margin:10px 0}code{font-family:ui-monospace,Consolas,monospace;background:var(--soft);padding:1px 5px;font-size:.9em}
+pre.cmd{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--accent);padding:10px 12px;margin:10px 0;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,Consolas,monospace}pre.cmd code{background:none;padding:0}
+.cmdl{font-size:11px;font-weight:700;color:var(--muted);margin:10px 0 -6px;letter-spacing:.06em;text-transform:uppercase}
+@media print{h3{margin:14px 0 6px;font-size:14px;break-after:avoid}h4{break-after:avoid}pre.cmd{break-inside:avoid}}`;
+function reportCss(th){return`:root{${Object.entries(th.v).map(([k,x])=>`--${k}:${x}`).join(';')}}\n`+REPORT_BASE+REPORT_EXTRA}
+function bodyHtml(d){const e=E;let out='';
+  const evs=d.items.filter(i=>i.b.t==='img');
+  if(evs.length)out+=`<h2>Resumen de evidencias</h2><table><thead><tr><th>ID</th><th>Sección</th><th>Descripción</th><th>Estado</th></tr></thead><tbody>${evs.map(i=>`<tr><td class="mono"><b>${i.ev}</b></td><td>${e(i.sec)}</td><td>${inl(i.b.cap)||'—'}</td><td class="${i.img?'ok':'pend'}">${i.img?'Completada':'Pendiente'}</td></tr>`).join('')}</tbody></table>`;
+  d.items.forEach(({b,lab,ev,img})=>{const T=(lab?`<span class="num">${e(lab)}</span> `:'')+e(b.text),ck=b.done?' <span class="ok" title="Completado">✓</span>':'';
+    if(b.t==='h1')out+=`<h2>${T}</h2>`;else if(b.t==='h2')out+=`<h3>${T}${ck}</h3>`;else if(b.t==='h3')out+=`<h4>${T}${ck}</h4>`;
+    else if(b.t==='p'){if(b.text.trim())out+=`<div class="txt">${md(b.text)}</div>`}
+    else if(b.t==='code')out+=(b.lang?`<div class="cmdl">${e(b.lang)}</div>`:'')+`<pre class="cmd"><code>${e(b.text)}</code></pre>`;
+    else if(b.t==='img')out+=`<div class="card"><div class="card-top"><div><span class="tag">${ev}</span></div><span class="pill">Evidencia</span></div>${b.cap?`<h3 style="margin-top:0">${inl(b.cap)}</h3>`:''}${img?`<div class="shot"><img src="${img.dataUrl}" alt="${e(b.cap||ev)}"/>${img.updatedAt?`<small>Capturado: ${e(img.updatedAt)}</small>`:''}</div>`:'<div class="empty">[Evidencia pendiente de captura]</div>'}${b.note.trim()?`<div class="note"><b>Observación técnica:</b> ${e(b.note.trim()).replace(/\n/g,'<br>')}</div>`:''}</div>`;
+    else if(b.t==='q')out+=`<div class="card"><h3 style="margin-top:0">${lab?`<span class="num">${e(lab)}</span> `:''}${inl(b.text)}</h3><div class="ans">${b.ans.trim()?e(b.ans.trim()).replace(/\n/g,'<br>'):'<em class="muted">Sin respuesta registrada.</em>'}</div></div>`});
+  return out}
+function buildHtml(d,th,lay){const e=E,s=d.st;
+  return`<!DOCTYPE html>\n<html lang="es"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />\n<title>${e(d.title)}</title><meta name="generator" content="Framework Packet Tracer · estilo ${e(th.name)}" />\n<style>${reportCss(th)}</style></head>
+<body class="h-${lay.head} c-${lay.card}"><div class="wrap t-${lay.table}">
+  <header class="h"><div class="kick">Reporte de práctica • Cisco Packet Tracer</div><h1>${e(d.title)}</h1>
+    <div class="meta">${d.student?`<span><b>Estudiante / Equipo:</b> ${e(d.student)}</span>`:''}${d.group?`<span><b>Grupo / Materia:</b> ${e(d.group)}</span>`:''}<span><b>Fecha:</b> ${e(d.nowStr)}</span></div>
+    <div class="chips">${s.st?`<span class="chip">Pasos: ${s.sd} / ${s.st}</span>`:''}${s.et?`<span class="chip">Evidencias: ${s.ed} / ${s.et}</span>`:''}${s.qt?`<span class="chip">Preguntas: ${s.qd} / ${s.qt}</span>`:''}</div></header>
+  <div class="body">${bodyHtml(d)}<footer>Estilo visual: ${e(th.name)} · Generado el ${e(d.nowStr)}</footer></div>
+</div></body></html>`}
+function buildMd(d,imgRef){const one=s=>String(s||'').replace(/\s*\n\s*/g,' ').trim(),quote=s=>s.split('\n').map(l=>'> '+l).join('\n');
+  const L=['---',`titulo: ${one(d.title)}`,`estudiante: ${one(d.student)}`,`grupo: ${one(d.group)}`,`fecha: ${d.nowStr}`,'---',''];
+  d.items.forEach(({b,lab,ev,img})=>{const pre=lab?lab+' ':'';
+    if(b.t==='h1'&&b.text.trim())L.push('# '+pre+one(b.text),'');else if(b.t==='h2'&&b.text.trim())L.push('## '+pre+one(b.text),'');else if(b.t==='h3'&&b.text.trim())L.push('### '+pre+one(b.text),'');
+    else if(b.t==='p'){if(b.text.trim())L.push(b.text.trim(),'')}
+    else if(b.t==='code'){const f=b.text.includes('```')?'~~~':'```';L.push(f+(b.lang||'').replace(/\s+/g,'-'),b.text,f,'')}
+    else if(b.t==='img'){const cap=(b.cap||ev).replace(/[\[\]]/g,'');L.push(img?`![${cap}](${imgRef(b,img,ev)})`:`_[Evidencia pendiente: ${cap}]_`,'');if(b.note.trim())L.push(quote('**Observación técnica:** '+b.note.trim()),'')}
+    else if(b.t==='q'){L.push('#### '+pre+one(b.text),'',quote(b.ans.trim()||'_Sin respuesta registrada._'),'')}});
+  return L.join('\n')}
+async function exportMd(d){const base='Reporte-'+(slug(d.title)||'practica');
+  if(!window.JSZip){downloadBlob(new Blob([buildMd(d,(b,r)=>r.dataUrl)],{type:'text/markdown;charset=utf-8'}),base+'.md');showToast('JSZip no cargó (¿sin internet?): .md con imágenes incrustadas en base64.','info');return}
+  const zip=new JSZip(),names={};d.items.forEach(({b,img,ev})=>{if(b.t==='img'&&img)names[b.id]=`images/${ev}-${slug(b.cap)||'captura'}.${imgExt(img)}`});
+  zip.file(base+'.md',buildMd(d,b=>names[b.id]));d.items.forEach(({b,img})=>{if(img&&names[b.id])zip.file(names[b.id],img.dataUrl.split(',')[1],{base64:true})});
+  downloadBlob(await zip.generateAsync({type:'blob'}),base+'.zip')}
+function printPdf(d,th,lay){const fr=document.createElement('iframe');fr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';document.body.appendChild(fr);
+  fr.onload=()=>{const w=fr.contentWindow;Promise.all([...w.document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r}))).then(()=>{const ot=document.title;document.title='Reporte-'+(slug(d.title)||'practica');
+    w.addEventListener('afterprint',()=>{document.title=ot;setTimeout(()=>fr.remove(),500)});w.focus();w.print()})};fr.srcdoc=buildHtml(d,th,lay)}
+async function runExport(){const fmt=(document.querySelector('input[name="exp-format"]:checked')||{}).value||'html';
+  try{const d=collect(),{theme,lay}=chooseStyle();
+    if(fmt==='html')downloadBlob(new Blob([buildHtml(d,theme,lay)],{type:'text/html;charset=utf-8'}),'Reporte-'+(slug(d.title)||'practica')+'.html');else if(fmt==='md')await exportMd(d);else printPdf(d,theme,lay);
+    closeOv('export-modal');showToast(fmt==='md'?'Markdown exportado.':`Reporte ${fmt.toUpperCase()} listo · estilo «${theme.name}»`,'success')}catch(err){console.error(err);showToast('No se pudo generar el reporte.','error')}}
+
+/* ================= atajos e inicio ================= */
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+  if((e.ctrlKey||e.metaKey)&&k==='e'){e.preventDefault();openExport()}
+  else if((e.ctrlKey||e.metaKey)&&k==='s'){e.preventDefault();saveProgress()}
+  else if((e.ctrlKey||e.metaKey)&&k==='z'&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)&&edit){e.preventDefault();undo()}
+  else if(k==='escape'){$$('.ov.on').forEach(o=>o.classList.remove('on'))}});
+window.addEventListener('DOMContentLoaded',async()=>{loadLocal();try{await initDB();for(const r of(await idb('readonly',s=>s.getAll())||[]))await putImg(r)}catch(e){}
+  if(doc){render();$('#start').classList.remove('on')}else showStart()});
+</script>
+</body>
+</html>
