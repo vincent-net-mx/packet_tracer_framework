@@ -98,6 +98,7 @@ textarea,select,input[type=text]{width:100%;font:inherit;color:var(--tx);backgro
 .acts{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:6px}.has .acts{justify-content:flex-start}
 .shot{display:block;max-width:100%;max-height:300px;border:1px solid var(--bd);cursor:zoom-in;margin-top:8px}
 .shc{border:1px solid var(--bd);padding:10px 12px 12px;margin-top:10px}.shc .sh{display:flex;gap:8px;align-items:center}.shc .sh .cd{flex:none}.shc .sh .hin{flex:1;min-width:0}.shc .acts{justify-content:flex-start}
+.shc .term{margin:8px 0 0}
 .zone.mini{padding:12px;margin-top:10px}.zone.mini p{margin:4px 0 8px}
 .blk.fold-hide{display:none}
 .k-h1 .fh{cursor:pointer;align-items:center}.k-h1 .fh:hover h3{text-decoration:underline;text-decoration-color:var(--bd)}
@@ -184,7 +185,7 @@ main{padding:24px 16px 140px}.hd .lbl{display:none}.hd h1 span{display:none}.fl,
     <tr><td>Texto, listas, tablas</td><td>Texto normal (admite <code>**negrita**</code>, <code>`código`</code>, listas y tablas Markdown)</td></tr>
     <tr><td>Bloque con tres comillas invertidas</td><td>Bloque de comandos con botón «Copiar»</td></tr>
     <tr><td><code>[IMAGEN: Descripción]</code> o <code>![Descripción](x)</code></td><td>Evidencia para subir o pegar como captura de pantalla (puedes agregar varias capturas a una misma evidencia)</td></tr>
-    <tr><td><code>[SALIDA: Descripción]</code></td><td>Evidencia para pegar como salida de consola (se muestra como bloque de código)</td></tr>
+    <tr><td><code>[SALIDA: Descripción]</code></td><td>Evidencia para pegar como salida de consola (se muestra como bloque de código; puedes agregar varias salidas)</td></tr>
     <tr><td>Encabezado <code>---</code> al inicio con <code>titulo:</code>, <code>estudiante:</code>, <code>grupo:</code></td><td>Rellena los datos de la práctica (opcional)</td></tr>
     </tbody></table></div></div></details>
 </div></div>
@@ -247,13 +248,14 @@ const TYPES=[['h1','Sección','#'],['h2','Paso','##'],['h3','Sub-paso','###'],['
 const TNAME={h1:'Sección (#)',h2:'Paso (##)',h3:'Sub-paso (###)',q:'Pregunta (####)',p:'Texto',img:'Evidencia',code:'Comandos'};
 const LV={h1:1,h2:2,h3:3};
 let doc=null,images={},meta={backupAt:null,dirty:false},db=null,edit=false,active=null,lastPos=null,insertFor=null,focusId=null,reveal=null,undoStack=[];
-const mk=(t,o)=>({id:uid(),t,text:'',cap:'',note:'',ans:'',done:false,lang:'',out:'',mode:'img',extra:[],fold:false,...o});
+const mk=(t,o)=>({id:uid(),t,text:'',cap:'',note:'',ans:'',done:false,lang:'',out:'',mode:'img',extra:[],fold:false,outs:[],...o});
 const get=id=>doc.blocks.find(b=>b.id===id),idx=id=>doc.blocks.findIndex(b=>b.id===id);
 const pctOf=(a,b)=>b?Math.round(a/b*100):0;
 const tag=(t,k)=>`<span class="tg" style="--c:var(--${k||'blue'})">${E(t)}</span>`;
 const meter=(l,a,b)=>`<div class="meter"><div class="mh"><span>${l}</span><b>${a}/${b}</b></div><div class="bar${a&&a===b?' ok':''}"><i style="width:${pctOf(a,b)}%"></i></div></div>`;
 const imgIds=b=>[b.id,...(b.extra||[])].filter(i=>images[i]);
-const evOk=b=>b.mode==='txt'?!!(b.out||'').trim():imgIds(b).length>0;
+const outsOk=b=>(b.outs||[]).filter(o=>(o.text||'').trim());
+const evOk=b=>b.mode==='txt'?outsOk(b).length>0:imgIds(b).length>0;
 const isFull=v=>!!(v&&v[1]&&v[0]===v[1]);
 const trk=b=>b.t==='h2'||b.t==='h3'?[1,!!b.done]:b.t==='img'?[1,evOk(b)]:b.t==='q'?[1,!!(b.ans||'').trim()]:[0,0];
 function stats(){const s={st:0,sd:0,et:0,ed:0,qt:0,qd:0};doc.blocks.forEach(b=>{
@@ -273,7 +275,10 @@ function persistDoc(){try{localStorage.setItem(KEY,JSON.stringify(doc))}catch(e)
 function persistMeta(){try{localStorage.setItem(META,JSON.stringify(meta))}catch(e){}}
 function dirty(){meta.dirty=true;persistMeta();clearTimeout(_pt);_pt=setTimeout(persistDoc,350);ui()}
 function loadLocal(){try{const p=JSON.parse(localStorage.getItem(KEY)||'null');if(p&&Array.isArray(p.blocks))doc=normDoc(p);const m=JSON.parse(localStorage.getItem(META)||'null');if(m)meta=m}catch(e){}}
-function normDoc(p){return{title:p.title||'',student:p.student||'',group:p.group||'',numbering:p.numbering!==false,blocks:(p.blocks||[]).map(b=>({...mk(TNAME[b.t]?b.t:'p'),...b,t:TNAME[b.t]?b.t:'p'}))}}
+function normDoc(p){return{title:p.title||'',student:p.student||'',group:p.group||'',numbering:p.numbering!==false,blocks:(p.blocks||[]).map(normBlock)}}
+function normBlock(b){const t=TNAME[b.t]?b.t:'p',nb={...mk(t),...b,t};
+  nb.outs=Array.isArray(b.outs)?b.outs.map(o=>({label:(o&&o.label)||'',text:(o&&o.text)||''})):[];
+  if(!nb.outs.length&&(b.out||'').trim())nb.outs=[{label:'',text:b.out}];nb.out='';return nb}
 const idb=(mode,fn)=>new Promise((res,rej)=>{if(!db)return rej();try{const r=fn(db.transaction('imgs',mode).objectStore('imgs'));r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
 const initDB=()=>new Promise((res,rej)=>{try{const r=indexedDB.open(DBN,1);r.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains('imgs'))e.target.result.createObjectStore('imgs',{keyPath:'id'})};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
 function blobUrl(d){const[h,b]=d.split(',');const mime=(h.match(/:(.*?);/)||[])[1]||'image/png';const bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:mime}))}
@@ -348,24 +353,29 @@ function mv(id,dir){const i=idx(id),[s,e]=range(i),L=LV[doc.blocks[i].t],B=doc.b
 /* ================= render ================= */
 const insBar=after=>`<div class="ins">${TYPES.map(([t,n,s])=>`<button class="btn ter sm" onclick="addBlock('${t}',${after?`'${after}'`:'null'})">${t==='img'?ic('img'):`<span class="mono">${E(s)}</span>`} ${n}</button>`).join('')}</div>`;
 function codeHtml(b){return`<div class="code"><div class="code-h"><span>${E(b.lang||'Comandos')}</span><button class="btn ghost sm" onclick="copyCode('${b.id}',this)">${ic('copy')}<span>Copiar comandos</span></button></div><pre><code>${E(b.text)}</code></pre></div>`}
-async function copyCode(id,btn,f){const t=get(id)[f||'text'];let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
+async function copyCode(id,btn,f){return copyText(get(id)[f||'text'],btn)}
+async function copyOut(id,i,btn){return copyText((((get(id)||{}).outs||[])[i]||{}).text||'',btn)}
+async function copyText(t,btn){let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
   if(!ok){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy')}catch(e){}ta.remove()}
   const l=btn.querySelector('span');const o=l.textContent;l.textContent=ok?'¡Copiado!':'No se pudo copiar';setTimeout(()=>l.textContent=o,1600)}
-function evTag(b){const ok=evOk(b),n=b.mode==='txt'?0:imgIds(b).length;return tag(ok?'Completada'+(n>1?' · '+n+' capturas':''):'Pendiente',ok?'green':'gray')}
+function evTag(b){const ok=evOk(b),t=b.mode==='txt',n=t?outsOk(b).length:imgIds(b).length;return tag(ok?'Completada'+(n>1?' · '+n+(t?' salidas':' capturas'):''):'Pendiente',ok?'green':'gray')}
 function updEv(id){const b=get(id),e=document.querySelector(`#${id} .evtag`);if(e)e.innerHTML=evTag(b);const v=document.querySelector(`#${id} .ev`);if(v)v.classList.toggle('has',evOk(b))}
-function setMode(id,m){const b=get(id);if(b.mode===m)return;b.mode=m;dirty();focusId=m==='txt'?id:null;render()}
+function setMode(id,m){const b=get(id);if(b.mode===m)return;b.mode=m;dirty();focusId=null;render();if(m==='txt'){const t=document.querySelector('#'+id+' .otx');if(t)t.focus({preventScroll:true})}}
 function evHtml(b,ctx){const ids=imgIds(b),id=ctx.ev[b.id],txt=b.mode==='txt',file=`<input type="file" accept="image/*" multiple hidden onchange="pickFile('${b.id}',this)">`;
   const tabs=`<div class="etabs" role="tablist"><button role="tab" aria-selected="${!txt}" class="${txt?'':'on'}" onclick="setMode('${b.id}','img')">Imagen</button><button role="tab" aria-selected="${txt}" class="${txt?'on':''}" onclick="setMode('${b.id}','txt')">Salida de consola</button></div>`;
   const zoneAttrs=`tabindex="0" ondrop="dropImg('${b.id}',event)" ondragover="dragZ(event,1)" ondragleave="dragZ(event,0)"`;
   const gallery=ids.map((iid,k)=>{const r=images[iid];return`<div class="shc"><div class="sh"><span class="cd">${ids.length>1?'Captura '+(k+1)+' de '+ids.length:'Captura'}</span><input type="text" class="hin" value="${E(r.label||'')}" placeholder="Equipo o dispositivo (opcional, ej. PC0, R1, Switch)" aria-label="Equipo o dispositivo de la captura" oninput="setImgLabel('${iid}',this.value)"></div><img class="shot" src="${r.url}" alt="${E(r.label||b.cap||id)}" onclick="openLb('${b.id}','${iid}')"><div class="acts"><button class="btn ghost sm" onclick="openLb('${b.id}','${iid}')">Ampliar</button><button class="btn ghost sm" onclick="downloadImg('${b.id}','${iid}')">Descargar</button><label class="btn ghost sm">Reemplazar<input type="file" accept="image/*" hidden onchange="replaceImg('${b.id}','${iid}',this)"></label><button class="btn ghost sm dng" onclick="rmImg('${b.id}','${iid}')">Quitar</button><span class="mu">${E(r.updatedAt||'')}</span></div></div>`}).join('');
   const imgPart=ids.length?`${gallery}<div class="zone mini" ${zoneAttrs}><p>Agregar otra captura (otro equipo o dispositivo): arrastra aquí, o pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Agregar captura(s)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`
   :`<div class="zone" ${zoneAttrs}>${ic('img')}<p>Arrastra tu captura aquí, o haz clic y pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Seleccionar imagen(es)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`;
-  const txtPart=`<div class="code term"><div class="code-h"><span>Salida de consola</span><span><button class="btn ghost sm" onclick="copyCode('${b.id}',this,'out')">${ic('copy')}<span>Copiar</span></button><button class="btn ghost sm dng" onclick="clearOut('${b.id}')">Limpiar</button></span></div><textarea class="tx mono auto" rows="8" spellcheck="false" placeholder="Pega aquí la salida de la consola (Ctrl+V)…" oninput="setF('${b.id}','out',this.value);ar(this);updEv('${b.id}')">${E(b.out)}</textarea></div>`;
+  const os=(b.outs&&b.outs.length)?b.outs:[{label:'',text:''}];
+  const txtPart=os.map((o,k)=>`<div class="shc"><div class="sh"><span class="cd">${os.length>1?'Salida '+(k+1)+' de '+os.length:'Salida'}</span><input type="text" class="hin" value="${E(o.label||'')}" placeholder="Equipo o dispositivo (opcional, ej. R1, Switch, PC0)" aria-label="Equipo o dispositivo de la salida" oninput="setOut('${b.id}',${k},'label',this.value)"></div><div class="code term"><div class="code-h"><span>Salida de consola</span><span><button class="btn ghost sm" onclick="copyOut('${b.id}',${k},this)">${ic('copy')}<span>Copiar</span></button><button class="btn ghost sm dng" onclick="rmOut('${b.id}',${k})">${os.length>1?'Quitar':'Limpiar'}</button></span></div><textarea class="tx mono auto otx" rows="8" spellcheck="false" placeholder="Pega aquí la salida de la consola (Ctrl+V)…" oninput="setOut('${b.id}',${k},'text',this.value);ar(this);updEv('${b.id}')">${E(o.text)}</textarea></div></div>`).join('')+`<div class="acts"><button class="btn ter sm" onclick="addOut('${b.id}')">${ic('plus')} Agregar otra salida</button></div>`;
   return`<div class="ev${evOk(b)?' has':''}${active===b.id?' act':''}"><div class="evh"><div><span class="cd">${id}</span></div><span class="evtag">${evTag(b)}</span></div>
   ${edit?`<label class="lb">Descripción de la evidencia</label><input type="text" class="hin" value="${E(b.cap)}" placeholder="Qué debe mostrar la evidencia" oninput="setF('${b.id}','cap',this.value)">`:`<p class="capt">${b.cap?inl(b.cap):'<span class="mu">Evidencia sin descripción</span>'}</p>`}
   ${tabs}${txt?txtPart:imgPart}
   <label class="lb">Observación técnica (opcional, se incluye en el reporte)</label><textarea class="tx auto" rows="2" oninput="setF('${b.id}','note',this.value);ar(this)">${E(b.note)}</textarea></div>`}
-function clearOut(id){setF(id,'out','');render()}
+function setOut(id,i,f,v){const b=get(id);if(!b)return;b.outs=b.outs||[];while(b.outs.length<=i)b.outs.push({label:'',text:''});b.outs[i][f]=v;dirty()}
+function addOut(id){const b=get(id);if(!b)return;b.outs=b.outs||[];if(!b.outs.length)b.outs.push({label:'',text:''});b.outs.push({label:'',text:''});dirty();render();const t=document.querySelectorAll('#'+id+' .otx');if(t.length)t[t.length-1].focus()}
+function rmOut(id,i){const b=get(id);if(!b)return;if((b.outs||[]).length>1)b.outs.splice(i,1);else b.outs=[];dirty();render()}
 function blockHtml(b,ctx){const lab=ctx.lab[b.id]||'',ind=ctx.ind[b.id]||0;let h='';
   const ctl=edit?`<div class="ctl"><select onchange="setType('${b.id}',this.value)" aria-label="Tipo de bloque">${Object.keys(TNAME).map(t=>`<option value="${t}"${t===b.t?' selected':''}>${TNAME[t]}</option>`).join('')}</select><span class="sp"></span>
     <button class="btn ghost sm icon" onclick="mv('${b.id}',-1)" title="${LV[b.t]?'Subir (con su contenido)':'Subir'}">${ic('up')}</button><button class="btn ghost sm icon" onclick="mv('${b.id}',1)" title="${LV[b.t]?'Bajar (con su contenido)':'Bajar'}">${ic('down')}</button>
@@ -461,7 +471,7 @@ function parseTemplate(src,fname){src=src.replace(/^\uFEFF/,'').replace(/\r\n?/g
       if(/^data:image\//.test(u))imgs[b.id]={id:b.id,dataUrl:u,name:'imagen',updatedAt:''};const[a,e]=quote(n);if(a){b.note=a.replace(/^\*\*Observaci[oó]n t[eé]cnica:\*\*\s*/i,'');n=e}blocks.push(b);continue}
     if((m=l.match(/^\s*_?\*?[\[<]\s*(IMAGEN|IMG|CAPTURA|EVIDENCIA|SALIDA|OUTPUT|CONSOLA)(?:\s+PENDIENTE)?\s*:\s*(.+?)\s*[\]>]\*?_?\s*$/i))){flush();const tx=/^(SALIDA|OUTPUT|CONSOLA)$/i.test(m[1]),b=mk('img',{cap:m[2],mode:tx?'txt':'img'});
       if(tx){let k=n+1;while(k<lines.length&&!lines[k].trim())k++;const fm=k<lines.length&&lines[k].match(/^\s*(`{3,}|~{3,})\s*(consola|salida|output)\s*$/i);
-        if(fm){const ch=fm[1][0],buf=[];k++;while(k<lines.length&&!(/^\s*(`{3,}|~{3,})\s*$/.test(lines[k])&&lines[k].trim()[0]===ch)){buf.push(lines[k]);k++}b.out=buf.join('\n');n=k}}
+        if(fm){const ch=fm[1][0],buf=[];k++;while(k<lines.length&&!(/^\s*(`{3,}|~{3,})\s*$/.test(lines[k])&&lines[k].trim()[0]===ch)){buf.push(lines[k]);k++}b.outs=[{label:'',text:buf.join('\n')}];n=k}}
       const[a2,e2]=quote(n);if(a2){b.note=a2.replace(/^\*\*Observaci[oó]n t[eé]cnica:\*\*\s*/i,'');n=e2}blocks.push(b);continue}
     if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(l)){flush();continue}
     if(!l.trim()){flush();continue}
@@ -632,6 +642,7 @@ pre.cmd{background:var(--soft);border:1px solid var(--line);border-left:4px soli
 @media print{h3{margin:14px 0 6px;font-size:14px;break-after:avoid}h4{break-after:avoid}pre.cmd{break-inside:avoid}}`;
 function reportCss(th){return`:root{${Object.entries(th.v).map(([k,x])=>`--${k}:${x}`).join(';')}}\n`+REPORT_BASE+REPORT_EXTRA}
 const shotHtml=(im,k,n,b,ev)=>{const t=(n>1?'Captura '+(k+1)+' de '+n:'')+(im.label?(n>1?' · ':'')+im.label:'');return`<div class="shot">${t?`<div class="shl">${E(t)}</div>`:''}<img src="${im.dataUrl}" alt="${E(im.label||b.cap||ev)}"/>${im.updatedAt?`<small>Capturado: ${E(im.updatedAt)}</small>`:''}</div>`};
+const outHtml=(o,k,n)=>{const t=(n>1?'Salida '+(k+1)+' de '+n:'')+(o.label?(n>1?' · ':'')+o.label:'');return(t?`<div class="shl">${E(t)}</div>`:'')+`<pre class="cmd"><code>${E(o.text.replace(/\s+$/,''))}</code></pre>`};
 function bodyHtml(d){const e=E;let out='';
   const evs=d.items.filter(i=>i.b.t==='img');
   if(evs.length)out+=`<h2>Resumen de evidencias</h2><table><thead><tr><th>ID</th><th>Sección</th><th>Descripción</th><th>Estado</th></tr></thead><tbody>${evs.map(i=>`<tr><td class="mono"><b>${i.ev}</b></td><td>${e(i.sec)}</td><td>${inl(i.b.cap)||'—'}</td><td class="${evOk(i.b)?'ok':'pend'}">${evOk(i.b)?'Completada':'Pendiente'}</td></tr>`).join('')}</tbody></table>`;
@@ -639,7 +650,7 @@ function bodyHtml(d){const e=E;let out='';
     if(b.t==='h1')out+=`<h2>${T}</h2>`;else if(b.t==='h2')out+=`<h3>${T}${ck}</h3>`;else if(b.t==='h3')out+=`<h4>${T}${ck}</h4>`;
     else if(b.t==='p'){if(b.text.trim())out+=`<div class="txt">${md(b.text)}</div>`}
     else if(b.t==='code')out+=(b.lang?`<div class="cmdl">${e(b.lang)}</div>`:'')+`<pre class="cmd"><code>${e(b.text)}</code></pre>`;
-    else if(b.t==='img'){const tx=b.mode==='txt';out+=`<div class="card"><div class="card-top"><div><span class="tag">${ev}</span></div><span class="pill">${tx?'Salida de consola':'Captura'}</span></div>${b.cap?`<h3 style="margin-top:0">${inl(b.cap)}</h3>`:''}${tx?(b.out.trim()?`<pre class="cmd"><code>${e(b.out.replace(/\s+$/,''))}</code></pre>`:'<div class="empty">[Salida pendiente]</div>'):(imgs.length?imgs.map((im,k)=>shotHtml(im,k,imgs.length,b,ev)).join(''):'<div class="empty">[Evidencia pendiente de captura]</div>')}${b.note.trim()?`<div class="note"><b>Observación técnica:</b> ${e(b.note.trim()).replace(/\n/g,'<br>')}</div>`:''}</div>`}
+    else if(b.t==='img'){const tx=b.mode==='txt';out+=`<div class="card"><div class="card-top"><div><span class="tag">${ev}</span></div><span class="pill">${tx?'Salida de consola':'Captura'}</span></div>${b.cap?`<h3 style="margin-top:0">${inl(b.cap)}</h3>`:''}${tx?(outsOk(b).length?outsOk(b).map((o,k,a)=>outHtml(o,k,a.length)).join(''):'<div class="empty">[Salida pendiente]</div>'):(imgs.length?imgs.map((im,k)=>shotHtml(im,k,imgs.length,b,ev)).join(''):'<div class="empty">[Evidencia pendiente de captura]</div>')}${b.note.trim()?`<div class="note"><b>Observación técnica:</b> ${e(b.note.trim()).replace(/\n/g,'<br>')}</div>`:''}</div>`}
     else if(b.t==='q')out+=`<div class="card"><h3 style="margin-top:0">${lab?`<span class="num">${e(lab)}</span> `:''}${inl(b.text)}</h3><div class="ans">${b.ans.trim()?e(b.ans.trim()).replace(/\n/g,'<br>'):'<em class="muted">Sin respuesta registrada.</em>'}</div></div>`});
   return out}
 function buildHtml(d,th,lay){const e=E,s=d.st;
@@ -657,7 +668,7 @@ function buildMd(d,imgRef){const one=s=>String(s||'').replace(/\s*\n\s*/g,' ').t
     else if(b.t==='p'){if(b.text.trim())L.push(b.text.trim(),'')}
     else if(b.t==='code'){const f=b.text.includes('```')?'~~~':'```';L.push(f+(b.lang||'').replace(/\s+/g,'-'),b.text,f,'')}
     else if(b.t==='img'){const cap=(b.cap||ev).replace(/[\[\]]/g,'');
-      if(b.mode==='txt'){if(b.out.trim()){const f=b.out.includes('```')?'~~~':'```';L.push(`[SALIDA: ${cap}]`,'',f+'consola',b.out.replace(/\s+$/,''),f,'')}else L.push(`_[Salida pendiente: ${cap}]_`,'')}
+      if(b.mode==='txt'){const os=outsOk(b);if(os.length){L.push(`[SALIDA: ${cap}]`,'');os.forEach((o,k)=>{const t=(os.length>1?'Salida '+(k+1):'')+(o.label?(os.length>1?' · ':'')+o.label:'');if(t)L.push('**'+t.replace(/[*\[\]]/g,'')+'**','');const f=o.text.includes('```')?'~~~':'```';L.push(f+'consola',o.text.replace(/\s+$/,''),f,'')})}else L.push(`_[Salida pendiente: ${cap}]_`,'')}
       else if(imgs.length)imgs.forEach((im,k)=>{const t=(imgs.length>1?'Captura '+(k+1):'')+(im.label?(imgs.length>1?' · ':'')+im.label:'');if(t)L.push('**'+t.replace(/[*\[\]]/g,'')+'**','');L.push(`![${(im.label||cap).replace(/[\[\]]/g,'')}](${imgRef(im)})`,'')});else L.push(`_[Evidencia pendiente: ${cap}]_`,'');if(b.note.trim())L.push(quote('**Observación técnica:** '+b.note.trim()),'')}
     else if(b.t==='q'){L.push('#### '+pre+one(b.text),'',quote(b.ans.trim()||'_Sin respuesta registrada._'),'')}});
   return L.join('\n')}
