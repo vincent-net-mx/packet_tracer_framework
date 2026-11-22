@@ -51,7 +51,7 @@ svg.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;str
 .nv button:hover{background:var(--l2)}
 .nv .c{font-size:12px;color:var(--tx2);font-variant-numeric:tabular-nums;flex:none}.nv .c.ok{color:var(--ok)}
 .nv button span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nv .n1{font-weight:600;margin-top:6px}.nv .n2{padding-left:28px;font-size:13px}.nv .n3{padding-left:44px;font-size:12.5px;color:var(--tx2)}
+.nv .n1{font-weight:600}.nv .n2{padding-left:28px;font-size:13px}.nv .n3{padding-left:44px;font-size:12.5px;color:var(--tx2)}
 .nv .none{padding:8px 16px;color:var(--tx2);font-size:13px}
 main{flex:1;min-width:0;padding:32px 48px 120px;max-width:1000px}
 .info{border:1px solid var(--bd);background:var(--l1);padding:16px;margin-bottom:8px}
@@ -97,6 +97,19 @@ textarea,select,input[type=text]{width:100%;font:inherit;color:var(--tx);backgro
 .zone.over,.zone:focus{background:color-mix(in srgb,var(--pri) 10%,transparent);border-color:var(--pri)}.zone p{margin:8px 0 12px}
 .acts{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:6px}.has .acts{justify-content:flex-start}
 .shot{display:block;max-width:100%;max-height:300px;border:1px solid var(--bd);cursor:zoom-in;margin-top:8px}
+.shc{border:1px solid var(--bd);padding:10px 12px 12px;margin-top:10px}.shc .sh{display:flex;gap:8px;align-items:center}.shc .sh .cd{flex:none}.shc .sh .hin{flex:1;min-width:0}.shc .acts{justify-content:flex-start}
+.zone.mini{padding:12px;margin-top:10px}.zone.mini p{margin:4px 0 8px}
+.blk.fold-hide{display:none}
+.k-h1 .fh{cursor:pointer;align-items:center}.k-h1 .fh:hover h3{text-decoration:underline;text-decoration-color:var(--bd)}
+.fbtn{flex:none;align-self:center;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;margin-left:-6px;background:none;border:0;color:var(--tx2);cursor:pointer;border-radius:4px}.fbtn:hover{background:var(--l2)}
+.fbtn .ic,.nf .ic{transition:transform .2s}.k-h1.folded .fbtn .ic,.ng.fold .nf .ic{transform:rotate(-90deg)}
+.k-h1.folded .bar{margin-top:10px}
+.nv .nrow{display:flex;align-items:center;margin-top:6px}.nv .nrow .n1{flex:1;min-width:0;margin-top:0;padding-left:4px}
+.nv .nf{width:32px;flex:none;padding:0;justify-content:center;border-left:3px solid transparent;color:var(--tx2)}.ng.fold .nkids{display:none}
+.nfa{display:flex;gap:6px;padding:4px 16px 0}
+.k-h1.done h3{color:var(--tx2)}.k-h1 .cnt.ok{color:var(--ok);font-weight:600}
+.etabs{display:flex;margin:12px 0 8px}.etabs button{flex:1;min-height:36px;border:0;border-bottom:2px solid var(--bd);background:none;color:var(--tx2);font:inherit;cursor:pointer}.etabs button.on{border-bottom-color:var(--pri);color:var(--tx);font-weight:600}
+.code-h>span:last-child{display:flex;gap:2px}.term{margin:8px 0}.term textarea{display:block;border:0;background:var(--l1);min-height:140px;white-space:pre;overflow-x:auto}
 .q{padding:16px 0 8px;margin-top:8px}.q h4{margin:8px 0;font-size:16px;font-weight:600;max-width:70ch;line-height:1.4}
 /* inicio */
 .start{position:fixed;inset:0;background:var(--bg);z-index:40;overflow:auto;display:none}.start.on{display:block}
@@ -170,7 +183,8 @@ main{padding:24px 16px 140px}.hd .lbl{display:none}.hd h1 span{display:none}.fl,
     <tr><td><code>#### Pregunta</code></td><td>Pregunta con cuadro de respuesta (las líneas <code>&gt; …</code> siguientes se toman como respuesta)</td></tr>
     <tr><td>Texto, listas, tablas</td><td>Texto normal (admite <code>**negrita**</code>, <code>`código`</code>, listas y tablas Markdown)</td></tr>
     <tr><td>Bloque con tres comillas invertidas</td><td>Bloque de comandos con botón «Copiar»</td></tr>
-    <tr><td><code>![Descripción de la captura](x)</code> o <code>[IMAGEN: Descripción]</code></td><td>Espacio para subir o pegar esa evidencia</td></tr>
+    <tr><td><code>[IMAGEN: Descripción]</code> o <code>![Descripción](x)</code></td><td>Evidencia para subir o pegar como captura de pantalla (puedes agregar varias capturas a una misma evidencia)</td></tr>
+    <tr><td><code>[SALIDA: Descripción]</code></td><td>Evidencia para pegar como salida de consola (se muestra como bloque de código)</td></tr>
     <tr><td>Encabezado <code>---</code> al inicio con <code>titulo:</code>, <code>estudiante:</code>, <code>grupo:</code></td><td>Rellena los datos de la práctica (opcional)</td></tr>
     </tbody></table></div></div></details>
 </div></div>
@@ -203,7 +217,7 @@ const ICON={copy:'<rect x="9" y="9" width="11" height="11"/><path d="M5 15V4h11"
 img:'<rect x="3" y="4" width="18" height="16"/><path d="M3 16l5-5 4 4 3-3 6 6"/>',trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',moon:'<path d="M20 14A8 8 0 0110 4a8 8 0 1010 10z"/>',
 file:'<path d="M7 3h7l4 4v14H7zM14 3v4h4"/>',dl:'<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/>',ul:'<path d="M12 15V4m0 0L8 8m4-4l4 4M5 20h14"/>',
 edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',tpl:'<path d="M7 3h7l4 4v14H7zM14 3v4h4M10 13h5M10 17h5"/>',home:'<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>',
-plus:'<path d="M12 5v14M5 12h14"/>',up:'<path d="M12 19V5m0 0l-5 5m5-5l5 5"/>',down:'<path d="M12 5v14m0 0l-5-5m5 5l5-5"/>',undo:'<path d="M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3"/>'};
+plus:'<path d="M12 5v14M5 12h14"/>',up:'<path d="M12 19V5m0 0l-5 5m5-5l5 5"/>',down:'<path d="M12 5v14m0 0l-5-5m5 5l5-5"/>',undo:'<path d="M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3"/>',chev:'<path d="M7 10l5 5 5-5"/>'};
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
 $('#menu').innerHTML=ic('menu');$('#b-th').innerHTML=ic('moon');$('#b-home').innerHTML=ic('home');$('#lb-x').innerHTML=ic('x');$('#ex-x').innerHTML=ic('x');$('#st-x').innerHTML=ic('x');
 $('#b-edit').insertAdjacentHTML('afterbegin',ic('edit'));$('#b-tpl').insertAdjacentHTML('afterbegin',ic('tpl'));$('#b-save').insertAdjacentHTML('afterbegin',ic('dl'));
@@ -229,18 +243,21 @@ function md(text){const L=String(text).replace(/\r/g,'').split('\n');let out='',
 
 /* ================= estado ================= */
 const KEY='pt_framework_doc_v1',META='pt_framework_meta',DBN='PTFramework_DB';
-const TYPES=[['h1','Sección','#'],['h2','Paso','##'],['h3','Sub-paso','###'],['q','Pregunta','####'],['p','Texto','¶'],['img','Imagen',''],['code','Comandos','</>']];
-const TNAME={h1:'Sección (#)',h2:'Paso (##)',h3:'Sub-paso (###)',q:'Pregunta (####)',p:'Texto',img:'Imagen',code:'Comandos'};
+const TYPES=[['h1','Sección','#'],['h2','Paso','##'],['h3','Sub-paso','###'],['q','Pregunta','####'],['p','Texto','¶'],['img','Evidencia (imagen)',''],['out','Evidencia (salida)','>_'],['code','Comandos','</>']];
+const TNAME={h1:'Sección (#)',h2:'Paso (##)',h3:'Sub-paso (###)',q:'Pregunta (####)',p:'Texto',img:'Evidencia',code:'Comandos'};
 const LV={h1:1,h2:2,h3:3};
 let doc=null,images={},meta={backupAt:null,dirty:false},db=null,edit=false,active=null,lastPos=null,insertFor=null,focusId=null,reveal=null,undoStack=[];
-const mk=(t,o)=>({id:uid(),t,text:'',cap:'',note:'',ans:'',done:false,lang:'',...o});
+const mk=(t,o)=>({id:uid(),t,text:'',cap:'',note:'',ans:'',done:false,lang:'',out:'',mode:'img',extra:[],fold:false,...o});
 const get=id=>doc.blocks.find(b=>b.id===id),idx=id=>doc.blocks.findIndex(b=>b.id===id);
 const pctOf=(a,b)=>b?Math.round(a/b*100):0;
 const tag=(t,k)=>`<span class="tg" style="--c:var(--${k||'blue'})">${E(t)}</span>`;
 const meter=(l,a,b)=>`<div class="meter"><div class="mh"><span>${l}</span><b>${a}/${b}</b></div><div class="bar${a&&a===b?' ok':''}"><i style="width:${pctOf(a,b)}%"></i></div></div>`;
-const trk=b=>b.t==='h2'||b.t==='h3'?[1,!!b.done]:b.t==='img'?[1,!!images[b.id]]:b.t==='q'?[1,!!(b.ans||'').trim()]:[0,0];
+const imgIds=b=>[b.id,...(b.extra||[])].filter(i=>images[i]);
+const evOk=b=>b.mode==='txt'?!!(b.out||'').trim():imgIds(b).length>0;
+const isFull=v=>!!(v&&v[1]&&v[0]===v[1]);
+const trk=b=>b.t==='h2'||b.t==='h3'?[1,!!b.done]:b.t==='img'?[1,evOk(b)]:b.t==='q'?[1,!!(b.ans||'').trim()]:[0,0];
 function stats(){const s={st:0,sd:0,et:0,ed:0,qt:0,qd:0};doc.blocks.forEach(b=>{
-  if(b.t==='h2'||b.t==='h3'){s.st++;if(b.done)s.sd++}else if(b.t==='img'){s.et++;if(images[b.id])s.ed++}else if(b.t==='q'){s.qt++;if((b.ans||'').trim())s.qd++}});
+  if(b.t==='h2'||b.t==='h3'){s.st++;if(b.done)s.sd++}else if(b.t==='img'){s.et++;if(evOk(b))s.ed++}else if(b.t==='q'){s.qt++;if((b.ans||'').trim())s.qd++}});
   s.T=s.st+s.et+s.qt;s.D=s.sd+s.ed+s.qd;s.pct=pctOf(s.D,s.T);return s}
 function grp(){const r={};let cur=null;doc.blocks.forEach(b=>{if(b.t==='h1'){cur=b.id;r[cur]=[0,0]}else if(cur){const[t,d]=trk(b);if(t){r[cur][1]++;if(d)r[cur][0]++}}});return r}
 function nums(){const lab={},ev={};let a=0,b2=0,c=0,q=0,im=0;doc.blocks.forEach(x=>{
@@ -275,8 +292,8 @@ let _ut=null;function ui(){clearTimeout(_ut);_ut=setTimeout(()=>{renderSide();up
 function hdr(){if(!doc)return;const s=stats();$('#hp').textContent=s.T?s.pct+'%':'';$('#hbar').style.width=s.pct+'%';
   $('#hd-title').innerHTML=E(doc.title||'Práctica sin nombre')+'<span>Packet Tracer</span>';$('#sdot').style.display=meta.dirty?'block':'none';
   const be=$('#b-edit');be.classList.toggle('on',edit);be.querySelector('.lbl').textContent=edit?'Terminar edición':'Editar estructura'}
-function updateCounts(){const g=grp();$$('[data-cnt]').forEach(e=>{const v=g[e.dataset.cnt];if(v)e.textContent=v[0]+'/'+v[1]});
-  $$('[data-bar]').forEach(e=>{const v=g[e.dataset.bar];if(v)e.firstElementChild.style.width=pctOf(v[0],v[1])+'%'})}
+function updateCounts(){const g=grp();$$('[data-cnt]').forEach(e=>{const v=g[e.dataset.cnt];if(v){const f=isFull(v);e.textContent=(f?'✓ Completa · ':'')+v[0]+'/'+v[1];e.classList.toggle('ok',f);const sec=e.closest('.k-h1');if(sec)sec.classList.toggle('done',f)}});
+  $$('[data-bar]').forEach(e=>{const v=g[e.dataset.bar];if(v){e.firstElementChild.style.width=pctOf(v[0],v[1])+'%';e.classList.toggle('ok',isFull(v))}});autoFold()}
 function ar(el){el.style.height='auto';el.style.height=Math.max(el.scrollHeight,el.classList.contains('tx')?72:0)+'px'}
 
 /* ================= edición de estructura ================= */
@@ -284,13 +301,42 @@ function snap(){undoStack.push(JSON.stringify(doc.blocks));if(undoStack.length>4
 function undo(){if(!undoStack.length)return showToast('No hay nada que deshacer.','info');doc.blocks=JSON.parse(undoStack.pop());dirty();render()}
 function toggleEdit(){edit=!edit;insertFor=null;render()}
 function toggleIns(id){insertFor=insertFor===id?null:id;render()}
-function addBlock(t,after){snap();const b=mk(t),i=after?idx(after)+1:doc.blocks.length;doc.blocks.splice(i,0,b);insertFor=null;edit=true;focusId=b.id;dirty();render()}
+function addBlock(t,after){snap();const b=t==='out'?mk('img',{mode:'txt'}):mk(t),i=after?idx(after)+1:doc.blocks.length;doc.blocks.splice(i,0,b);insertFor=null;edit=true;focusId=b.id;dirty();render()}
 function delBlock(id){snap();const b=get(id);doc.blocks.splice(idx(id),1);insertFor=null;dirty();render();showToast('Bloque eliminado.','info',{label:'Deshacer',fn:undo})}
 function setType(id,t){snap();const b=get(id);if(b.t==='img'&&t!=='img')b.text=b.cap||b.text;if(t==='img')b.cap=b.text||b.cap;b.t=t;dirty();render()}
 function setF(id,f,v){const b=get(id);if(b){b[f]=v;dirty()}}
 function setDoc(f,v){doc[f]=v;dirty()}
 function setNum(v){doc.numbering=v;dirty();render()}
-function toggleDone(id,v){const b=get(id);b.done=v;const e=document.getElementById(id);if(e){const s=e.querySelector('.st');if(s)s.classList.toggle('done',v)}dirty()}
+/* ----- secciones plegables (toggle list) ----- */
+const secMap=()=>{const m={};let sc=null;doc.blocks.forEach(b=>{if(b.t==='h1')sc=b.id;m[b.id]=b.t==='h1'?null:sc});return m};
+const secOf=id=>secMap()[id]||null;
+const foldBtn=b=>`<button class="fbtn" aria-expanded="${!b.fold}" aria-label="Plegar o desplegar la sección" onclick="event.stopPropagation();toggleFold('${b.id}')">${ic('chev')}</button>`;
+function setFold(id,f){const b=get(id);if(!b||b.t!=='h1')return;b.fold=!!f;
+  $$(`[data-sec="${id}"]`).forEach(e=>e.classList.toggle('fold-hide',!!f&&!edit));
+  const e=document.getElementById(id);if(e){const sc=e.querySelector('.k-h1');if(sc)sc.classList.toggle('folded',!!f);const bt=e.querySelector('.fbtn');if(bt)bt.setAttribute('aria-expanded',String(!f))}
+  clearTimeout(_pt);_pt=setTimeout(persistDoc,350)}
+function toggleFold(id){const b=get(id);if(!b)return;setFold(id,!b.fold);renderSide()}
+function foldAll(f){doc.blocks.forEach(b=>{if(b.t==='h1')setFold(b.id,f)});renderSide()}
+/* Una sección que acaba de completarse se pliega sola (salvo que estés escribiendo en ella o en modo edición). */
+const wasFull={};
+function initFull(){const g=grp();doc.blocks.forEach(b=>{if(b.t==='h1')wasFull[b.id]=isFull(g[b.id])})}
+function autoFold(){if(!doc||edit)return;const g=grp(),ae=document.activeElement;
+  doc.blocks.forEach(b=>{if(b.t!=='h1')return;const f=isFull(g[b.id]);
+    if(!f){wasFull[b.id]=false;return}
+    if(wasFull[b.id])return;
+    if(ae&&ae.matches&&ae.matches('textarea,input[type=text]')&&ae.closest('[data-sec="'+b.id+'"]'))return;
+    wasFull[b.id]=true;setFold(b.id,true);renderSide();
+    const h=document.getElementById(b.id);if(h)h.scrollIntoView({block:'nearest',behavior:'smooth'});
+    showToast('Sección «'+(b.text||'sin título')+'» completa: se replegó. Haz clic en su título para abrirla.','success')})}
+document.addEventListener('focusout',()=>setTimeout(()=>{try{autoFold()}catch(e){}},80));
+function paintDone(id){const b=get(id),e=document.getElementById(id);if(!b||!e)return;const s=e.querySelector('.st');if(!s)return;s.classList.toggle('done',!!b.done);const c=s.querySelector('input[type=checkbox]');if(c)c.checked=!!b.done}
+function childrenOf(k){const r=[];for(let j=k+1;j<doc.blocks.length;j++){const t=doc.blocks[j].t;if(t==='h3')r.push(doc.blocks[j]);else if(t==='h1'||t==='h2')break}return r}
+function parentOf(i){for(let k=i-1;k>=0;k--){const t=doc.blocks[k].t;if(t==='h2')return k;if(t==='h1')return -1}return -1}
+/* Un paso (##) con sub-pasos (###) se marca solo cuando todos sus sub-pasos están completos, y se desmarca si desmarcas alguno. */
+function syncParent(id){const k=parentOf(idx(id));if(k<0)return;const p=doc.blocks[k],ch=childrenOf(k);if(!ch.length)return;const all=ch.every(c=>c.done);if(!!p.done!==all){p.done=all;paintDone(p.id);if(all)showToast('Paso completado automáticamente: «'+(p.text||'sin título')+'».','success')}}
+/* Al cargar un progreso: marca los pasos cuyos sub-pasos ya estaban todos completos (nunca desmarca). */
+function syncDone(){doc.blocks.forEach((b,k)=>{if(b.t==='h2'){const ch=childrenOf(k);if(ch.length&&ch.every(c=>c.done))b.done=true}})}
+function toggleDone(id,v){const b=get(id);b.done=v;paintDone(id);if(b.t==='h3')syncParent(id);dirty()}
 function range(i){const L=LV[doc.blocks[i].t];if(!L)return[i,i+1];let e=i+1;while(e<doc.blocks.length&&!(LV[doc.blocks[e].t]&&LV[doc.blocks[e].t]<=L))e++;return[i,e]}
 function mv(id,dir){const i=idx(id),[s,e]=range(i),L=LV[doc.blocks[i].t],B=doc.blocks;let ok=false;snap();
   if(dir<0){if(s>0){if(!L){const x=B.splice(s,1)[0];B.splice(s-1,0,x);ok=true}else{let ns=-1;for(let p=s-1;p>=0;p--){const l=LV[B[p].t];if(l&&l<L)break;if(l===L){ns=p;break}}
@@ -302,28 +348,38 @@ function mv(id,dir){const i=idx(id),[s,e]=range(i),L=LV[doc.blocks[i].t],B=doc.b
 /* ================= render ================= */
 const insBar=after=>`<div class="ins">${TYPES.map(([t,n,s])=>`<button class="btn ter sm" onclick="addBlock('${t}',${after?`'${after}'`:'null'})">${t==='img'?ic('img'):`<span class="mono">${E(s)}</span>`} ${n}</button>`).join('')}</div>`;
 function codeHtml(b){return`<div class="code"><div class="code-h"><span>${E(b.lang||'Comandos')}</span><button class="btn ghost sm" onclick="copyCode('${b.id}',this)">${ic('copy')}<span>Copiar comandos</span></button></div><pre><code>${E(b.text)}</code></pre></div>`}
-async function copyCode(id,btn){const t=get(id).text;let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
+async function copyCode(id,btn,f){const t=get(id)[f||'text'];let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);ok=true}}catch(e){}
   if(!ok){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{ok=document.execCommand('copy')}catch(e){}ta.remove()}
   const l=btn.querySelector('span');const o=l.textContent;l.textContent=ok?'¡Copiado!':'No se pudo copiar';setTimeout(()=>l.textContent=o,1600)}
-function evHtml(b,ctx){const r=images[b.id],id=ctx.ev[b.id],file=`<input type="file" accept="image/*" multiple hidden onchange="pickFile('${b.id}',this)">`;
-  return`<div class="ev${r?' has':''}${active===b.id?' act':''}"><div class="evh"><div><span class="cd">${id}</span></div>${tag(r?'Completada':'Pendiente',r?'green':'gray')}</div>
-  ${edit?`<label class="lb">Descripción de la captura</label><input type="text" class="hin" value="${E(b.cap)}" placeholder="Qué debe mostrar la captura" oninput="setF('${b.id}','cap',this.value)">`:`<p class="capt">${b.cap?inl(b.cap):'<span class="mu">Captura sin descripción</span>'}</p>`}
-  ${r?`<img class="shot" src="${r.url}" alt="${E(b.cap||id)}" onclick="openLb('${b.id}')"><div class="acts"><button class="btn ghost sm" onclick="openLb('${b.id}')">Ampliar</button><button class="btn ghost sm" onclick="downloadImg('${b.id}')">Descargar</button><label class="btn ghost sm">Reemplazar${file}</label><button class="btn ghost sm dng" onclick="rmImg('${b.id}')">Quitar</button><span class="mu">${E(r.updatedAt||'')}</span></div>`
-  :`<div class="zone" tabindex="0" ondrop="dropImg('${b.id}',event)" ondragover="dragZ(event,1)" ondragleave="dragZ(event,0)">${ic('img')}<p>Arrastra tu captura aquí, o haz clic y pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Seleccionar imagen(es)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`}
+function evTag(b){const ok=evOk(b),n=b.mode==='txt'?0:imgIds(b).length;return tag(ok?'Completada'+(n>1?' · '+n+' capturas':''):'Pendiente',ok?'green':'gray')}
+function updEv(id){const b=get(id),e=document.querySelector(`#${id} .evtag`);if(e)e.innerHTML=evTag(b);const v=document.querySelector(`#${id} .ev`);if(v)v.classList.toggle('has',evOk(b))}
+function setMode(id,m){const b=get(id);if(b.mode===m)return;b.mode=m;dirty();focusId=m==='txt'?id:null;render()}
+function evHtml(b,ctx){const ids=imgIds(b),id=ctx.ev[b.id],txt=b.mode==='txt',file=`<input type="file" accept="image/*" multiple hidden onchange="pickFile('${b.id}',this)">`;
+  const tabs=`<div class="etabs" role="tablist"><button role="tab" aria-selected="${!txt}" class="${txt?'':'on'}" onclick="setMode('${b.id}','img')">Imagen</button><button role="tab" aria-selected="${txt}" class="${txt?'on':''}" onclick="setMode('${b.id}','txt')">Salida de consola</button></div>`;
+  const zoneAttrs=`tabindex="0" ondrop="dropImg('${b.id}',event)" ondragover="dragZ(event,1)" ondragleave="dragZ(event,0)"`;
+  const gallery=ids.map((iid,k)=>{const r=images[iid];return`<div class="shc"><div class="sh"><span class="cd">${ids.length>1?'Captura '+(k+1)+' de '+ids.length:'Captura'}</span><input type="text" class="hin" value="${E(r.label||'')}" placeholder="Equipo o dispositivo (opcional, ej. PC0, R1, Switch)" aria-label="Equipo o dispositivo de la captura" oninput="setImgLabel('${iid}',this.value)"></div><img class="shot" src="${r.url}" alt="${E(r.label||b.cap||id)}" onclick="openLb('${b.id}','${iid}')"><div class="acts"><button class="btn ghost sm" onclick="openLb('${b.id}','${iid}')">Ampliar</button><button class="btn ghost sm" onclick="downloadImg('${b.id}','${iid}')">Descargar</button><label class="btn ghost sm">Reemplazar<input type="file" accept="image/*" hidden onchange="replaceImg('${b.id}','${iid}',this)"></label><button class="btn ghost sm dng" onclick="rmImg('${b.id}','${iid}')">Quitar</button><span class="mu">${E(r.updatedAt||'')}</span></div></div>`}).join('');
+  const imgPart=ids.length?`${gallery}<div class="zone mini" ${zoneAttrs}><p>Agregar otra captura (otro equipo o dispositivo): arrastra aquí, o pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Agregar captura(s)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`
+  :`<div class="zone" ${zoneAttrs}>${ic('img')}<p>Arrastra tu captura aquí, o haz clic y pega con <kbd>Ctrl</kbd> + <kbd>V</kbd></p><div class="acts"><label class="btn ter sm">Seleccionar imagen(es)${file}</label><button class="btn ghost sm" onclick="pasteBtn('${b.id}')">Pegar del portapapeles</button></div></div>`;
+  const txtPart=`<div class="code term"><div class="code-h"><span>Salida de consola</span><span><button class="btn ghost sm" onclick="copyCode('${b.id}',this,'out')">${ic('copy')}<span>Copiar</span></button><button class="btn ghost sm dng" onclick="clearOut('${b.id}')">Limpiar</button></span></div><textarea class="tx mono auto" rows="8" spellcheck="false" placeholder="Pega aquí la salida de la consola (Ctrl+V)…" oninput="setF('${b.id}','out',this.value);ar(this);updEv('${b.id}')">${E(b.out)}</textarea></div>`;
+  return`<div class="ev${evOk(b)?' has':''}${active===b.id?' act':''}"><div class="evh"><div><span class="cd">${id}</span></div><span class="evtag">${evTag(b)}</span></div>
+  ${edit?`<label class="lb">Descripción de la evidencia</label><input type="text" class="hin" value="${E(b.cap)}" placeholder="Qué debe mostrar la evidencia" oninput="setF('${b.id}','cap',this.value)">`:`<p class="capt">${b.cap?inl(b.cap):'<span class="mu">Evidencia sin descripción</span>'}</p>`}
+  ${tabs}${txt?txtPart:imgPart}
   <label class="lb">Observación técnica (opcional, se incluye en el reporte)</label><textarea class="tx auto" rows="2" oninput="setF('${b.id}','note',this.value);ar(this)">${E(b.note)}</textarea></div>`}
+function clearOut(id){setF(id,'out','');render()}
 function blockHtml(b,ctx){const lab=ctx.lab[b.id]||'',ind=ctx.ind[b.id]||0;let h='';
   const ctl=edit?`<div class="ctl"><select onchange="setType('${b.id}',this.value)" aria-label="Tipo de bloque">${Object.keys(TNAME).map(t=>`<option value="${t}"${t===b.t?' selected':''}>${TNAME[t]}</option>`).join('')}</select><span class="sp"></span>
     <button class="btn ghost sm icon" onclick="mv('${b.id}',-1)" title="${LV[b.t]?'Subir (con su contenido)':'Subir'}">${ic('up')}</button><button class="btn ghost sm icon" onclick="mv('${b.id}',1)" title="${LV[b.t]?'Bajar (con su contenido)':'Bajar'}">${ic('down')}</button>
     <button class="btn ter sm" onclick="toggleIns('${b.id}')">${ic('plus')} Insertar debajo</button><button class="btn ghost sm icon dng" onclick="delBlock('${b.id}')" title="Eliminar bloque">${ic('trash')}</button></div>`:'';
   const hin=(ph)=>`<input type="text" class="hin" value="${E(b.text)}" placeholder="${ph}" oninput="setF('${b.id}','text',this.value)">`;
-  if(b.t==='h1')h=`<section class="k-h1"><header><div class="hrow">${lab?`<span class="cd">${E(lab)}</span>`:''}${edit?hin('Título de la sección'):`<h3>${E(b.text)||'<em>Sin título</em>'}</h3>`}</div><span class="cnt" data-cnt="${b.id}"></span></header><div class="bar" data-bar="${b.id}"><i></i></div></section>`;
+  if(b.t==='h1')h=`<section class="k-h1${isFull(ctx.g[b.id])?' done':''}${b.fold&&!edit?' folded':''}"><header${edit?'':` class="fh" onclick="toggleFold('${b.id}')"`}><div class="hrow">${edit?'':foldBtn(b)}${lab?`<span class="cd">${E(lab)}</span>`:''}${edit?hin('Título de la sección'):`<h3>${E(b.text)||'<em>Sin título</em>'}</h3>`}</div><span class="cnt" data-cnt="${b.id}"></span></header><div class="bar" data-bar="${b.id}"><i></i></div></section>`;
   else if(b.t==='h2'||b.t==='h3'){const d=!!b.done;h=`<article class="st k-${b.t}${d?' done':''}"><label class="ck"><input type="checkbox"${d?' checked':''} onchange="toggleDone('${b.id}',this.checked)" aria-label="Completar"><i></i></label><div class="sb"><div class="sm">${lab?`<span class="cd">${b.t==='h2'?'Paso':'Sub-paso'} ${E(lab)}</span>`:`<span class="cd">${b.t==='h2'?'Paso':'Sub-paso'}</span>`}</div>${edit?hin(b.t==='h2'?'Título del paso':'Título del sub-paso'):`<h4>${E(b.text)||'<em>Sin título</em>'}</h4>`}</div></article>`}
   else if(b.t==='q')h=`<div class="q"><div class="sm"><span class="cd">${E(lab||'Pregunta')}</span>${tag('Pregunta','purple')}</div>${edit?hin('Escribe la pregunta'):`<h4>${inl(b.text)||'<em>Sin enunciado</em>'}</h4>`}<textarea class="tx auto" rows="4" placeholder="Redacta tu respuesta…" oninput="setF('${b.id}','ans',this.value);ar(this)">${E(b.ans)}</textarea></div>`;
   else if(b.t==='p')h=edit?`<textarea class="tx auto" rows="3" placeholder="Texto normal (admite Markdown: **negrita**, \`código\`, listas y tablas)" oninput="setF('${b.id}','text',this.value);ar(this)">${E(b.text)}</textarea><p class="hint">Admite Markdown: **negrita**, \`código\`, listas y tablas.</p>`:(b.text.trim()?`<div class="txt">${md(b.text)}</div>`:'');
   else if(b.t==='code')h=edit?`<label class="lb">Etiqueta (opcional, ej. «R1», «Switch», «PC0»)</label><input type="text" class="hin" value="${E(b.lang)}" oninput="setF('${b.id}','lang',this.value)"><textarea class="tx mono auto" rows="4" placeholder="Comandos o salida de consola" oninput="setF('${b.id}','text',this.value);ar(this)" style="margin-top:6px">${E(b.text)}</textarea>`:codeHtml(b);
   else if(b.t==='img')h=evHtml(b,ctx);
-  return`<div class="blk" id="${b.id}" data-b="${b.id}" style="--ind:${ind}px">${ctl}${h}${insertFor===b.id?insBar(b.id):''}</div>`}
-function mainHtml(){const n=nums(),ctx={lab:n.lab,ev:n.ev,ind:{}};let cur=0;
+  const sid=ctx.sec[b.id],hid=sid&&!edit&&(get(sid)||{}).fold;
+  return`<div class="blk${hid?' fold-hide':''}" id="${b.id}" data-b="${b.id}"${sid?` data-sec="${sid}"`:''} style="--ind:${ind}px">${ctl}${h}${insertFor===b.id?insBar(b.id):''}</div>`}
+function mainHtml(){const n=nums(),ctx={lab:n.lab,ev:n.ev,ind:{},g:grp(),sec:secMap()};let cur=0;
   doc.blocks.forEach(b=>{if(b.t==='h1'){cur=0;ctx.ind[b.id]=0}else if(b.t==='h2'){cur=32;ctx.ind[b.id]=0}else if(b.t==='h3'){cur=64;ctx.ind[b.id]=32}else ctx.ind[b.id]=cur});
   const info=`<div class="info"><label class="lb" for="i-title">Nombre de la práctica</label><input type="text" id="i-title" value="${E(doc.title)}" placeholder="Ej. Configuración de DHCPv4 con relay" oninput="setDoc('title',this.value)">
     <div class="fl"><div><label class="lb" for="i-name">Estudiante / equipo</label><input type="text" id="i-name" value="${E(doc.student)}" oninput="setDoc('student',this.value)"></div><div><label class="lb" for="i-group">Matrícula / grupo / materia</label><input type="text" id="i-group" value="${E(doc.group)}" oninput="setDoc('group',this.value)"></div></div></div>`;
@@ -336,39 +392,53 @@ function render(){if(!doc)return;const y=scrollY;$('#main').innerHTML=mainHtml()
   if(focusId){const e=document.getElementById(focusId);focusId=null;if(e){const f=e.querySelector('input[type=text],textarea');if(f)f.focus({preventScroll:true});e.scrollIntoView({block:'center',behavior:'smooth'})}}
   else if(reveal){const e=document.getElementById(reveal);reveal=null;if(e)e.scrollIntoView({block:'nearest',behavior:'smooth'})}}
 function renderSide(){if(!doc)return;const s=stats(),g=grp(),n=nums();
-  const items=doc.blocks.filter(b=>LV[b.t]).map(b=>{const lab=n.lab[b.id]?n.lab[b.id]+' ':'',txt=E(lab+(b.text||'Sin título'));
-    if(b.t==='h1'){const v=g[b.id]||[0,0];return`<button class="n1" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c${v[1]&&v[0]===v[1]?' ok':''}">${v[1]?v[0]+'/'+v[1]:''}</span></button>`}
-    return`<button class="n${LV[b.t]}" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c ok">${b.done?'✓':''}</span></button>`}).join('')||'<p class="none">Aún no hay secciones ni pasos.</p>';
+  const rows=[];let open=false;
+  doc.blocks.filter(b=>LV[b.t]).forEach(b=>{const lab=n.lab[b.id]?n.lab[b.id]+' ':'',txt=E(lab+(b.text||'Sin título'));
+    if(b.t==='h1'){const v=g[b.id]||[0,0];if(open)rows.push('</div></div>');open=true;
+      rows.push(`<div class="ng${b.fold?' fold':''}"><div class="nrow"><button class="nf" aria-expanded="${!b.fold}" aria-label="Plegar o desplegar sección" onclick="toggleFold('${b.id}')">${ic('chev')}</button><button class="n1" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c${isFull(v)?' ok':''}">${v[1]?(isFull(v)?'✓ ':'')+v[0]+'/'+v[1]:''}</span></button></div><div class="nkids">`)}
+    else rows.push(`<button class="n${LV[b.t]}" onclick="goTo('${b.id}')"><span>${txt}</span><span class="c ok">${b.done?'✓':''}</span></button>`)});
+  if(open)rows.push('</div></div>');
+  const hasSec=doc.blocks.some(b=>b.t==='h1'),items=rows.join('')||'<p class="none">Aún no hay secciones ni pasos.</p>';
   const bk=meta.dirty?['w','Cambios sin guardar en un .json']:meta.backupAt?['g','Progreso guardado '+new Date(meta.backupAt).toLocaleString('es-MX',{dateStyle:'short',timeStyle:'short'})]:['','Aún no has guardado un .json'];
   $('#side').innerHTML=`<div class="pan"><div class="big">${s.pct}<small>%</small></div><p class="mu">avance total</p>${meter('Pasos',s.sd,s.st)}${meter('Evidencias',s.ed,s.et)}${meter('Preguntas',s.qd,s.qt)}
   <div class="bk"><span class="dot ${bk[0]}"></span><span>${bk[1]}</span></div><button class="btn ter block" onclick="saveProgress()"><span>Guardar progreso</span>${ic('dl')}</button></div>
-  <div class="pan"><label class="chk"><input type="checkbox"${doc.numbering?' checked':''} onchange="setNum(this.checked)"> Numeración automática de títulos</label><button class="btn ghost sm" style="margin-top:12px" onclick="downloadGuide()">${ic('dl')} Guía de formato para IA</button></div><nav class="nv">${items}</nav>`}
-function goTo(id){$('#side').classList.remove('open');const e=document.getElementById(id);if(e){e.scrollIntoView({behavior:'smooth',block:'start'});e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash')}}
+  <div class="pan"><label class="chk"><input type="checkbox"${doc.numbering?' checked':''} onchange="setNum(this.checked)"> Numeración automática de títulos</label><button class="btn ghost sm" style="margin-top:12px" onclick="downloadGuide()">${ic('dl')} Guía de formato para IA</button></div>${hasSec?`<div class="nfa"><button class="btn ghost sm" onclick="foldAll(true)">Plegar todas</button><button class="btn ghost sm" onclick="foldAll(false)">Desplegar todas</button></div>`:''}<nav class="nv">${items}</nav>`}
+function goTo(id){$('#side').classList.remove('open');const sc=secOf(id);if(sc&&sc!==id&&get(sc).fold&&!edit){setFold(sc,false);renderSide()}const e=document.getElementById(id);if(e){e.scrollIntoView({behavior:'smooth',block:'start'});e.classList.remove('flash');void e.offsetWidth;e.classList.add('flash')}}
 
 /* ================= imágenes ================= */
 function readImg(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const url=fr.result;if(file.size<1.2e6||/gif|svg/.test(file.type))return res(url);
   const im=new Image();im.onload=()=>{const M=2200;if(im.width<=M)return res(url);const c=document.createElement('canvas');c.width=M;c.height=Math.round(im.height*M/im.width);c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL(file.type==='image/jpeg'?'image/jpeg':'image/png',.92))};im.onerror=()=>res(url);im.src=url};fr.onerror=rej;fr.readAsDataURL(file)})}
 async function setImage(id,file){if(!file||!file.type.startsWith('image/')){showToast('Selecciona o pega un archivo de imagen válido.','warning');return false}
   const old=images[id];if(old&&old.url)URL.revokeObjectURL(old.url);const dataUrl=await readImg(file);
-  await putImg({id,dataUrl,name:file.name||'captura.png',updatedAt:new Date().toLocaleString('es-MX',{hour12:false})});return true}
+  await putImg({id,dataUrl,name:file.name||'captura.png',label:(old&&old.label)||'',updatedAt:new Date().toLocaleString('es-MX',{hour12:false})});return true}
+/* mode: sin valor → las imágenes se agregan al mismo bloque de evidencia (la primera es la principal, el resto va en b.extra);
+   'new' → un bloque nuevo por imagen justo debajo; 'end' → un bloque nuevo por imagen al final. */
 async function fillFiles(id,files,mode){const fs=[...files].filter(f=>f.type.startsWith('image/'));if(!fs.length)return showToast('Selecciona o pega un archivo de imagen válido.','warning');snap();
-  let after=id,first=true;if(mode==='new'){after=id;}
-  for(const f of fs){let target;if(mode!=='new'&&first){target=id}else{const nb=mk('img');const i=mode==='end'?doc.blocks.length:idx(after)+1;doc.blocks.splice(i,0,nb);target=nb.id}
-    first=false;if(await setImage(target,f))after=target}
-  active=after;lastPos=after;dirty();render();showToast(fs.length>1?fs.length+' imágenes añadidas.':'Imagen guardada.','success')}
+  let after=id;
+  for(const f of fs){
+    if(mode==='new'||mode==='end'){const nb=mk('img'),i=mode==='end'?doc.blocks.length:idx(after)+1;doc.blocks.splice(i,0,nb);if(await setImage(nb.id,f)){after=nb.id;nb.mode='img'}}
+    else{const b=get(id);if(!b)continue;if(!images[b.id]){if(await setImage(b.id,f))b.mode='img'}else{const nid=uid();if(await setImage(nid,f)){b.extra=[...(b.extra||[]),nid];b.mode='img'}}after=id}}
+  active=after;lastPos=after;{const sc=secOf(after);if(sc&&get(sc).fold)setFold(sc,false)}dirty();render();showToast(fs.length>1?fs.length+' imágenes añadidas.':'Imagen guardada.','success')}
+async function replaceImg(bid,iid,inp){const f=inp.files[0];inp.value='';if(!f)return;if(await setImage(iid,f)){dirty();render();showToast('Imagen reemplazada.','success')}}
+const _lt={};function setImgLabel(iid,v){const r=images[iid];if(!r)return;r.label=v;dirty();clearTimeout(_lt[iid]);_lt[iid]=setTimeout(()=>{const x=images[iid];if(!x)return;const{url,...rec}=x;idb('readwrite',s=>s.put(rec)).catch(()=>{})},400)}
 function pickFile(id,inp){const f=[...inp.files];inp.value='';if(f.length)fillFiles(id,f)}
 function addFiles(inp){const f=[...inp.files];inp.value='';if(f.length)fillFiles(null,f,'end')}
 function dropImg(id,e){e.preventDefault();e.currentTarget.classList.remove('over');fillFiles(id,e.dataTransfer.files)}
 function dragZ(e,on){e.preventDefault();e.currentTarget.classList.toggle('over',!!on)}
 async function pasteBtn(id){active=id;lastPos=id;try{for(const it of await navigator.clipboard.read()){const t=it.types.find(x=>x.startsWith('image/'));if(t){const b=await it.getType(t);return fillFiles(id,[new File([b],'captura.png',{type:t})])}}showToast('No hay imagen en el portapapeles.','warning')}catch(e){showToast('Haz clic en la tarjeta y presiona Ctrl+V para pegar tu captura.','info')}}
-async function rmImg(id){await delImg(id);dirty();render()}
+async function rmImg(bid,iid){const b=get(bid);iid=iid||bid;
+  if(iid===bid){const ex=(b.extra||[]).filter(i=>images[i]);
+    if(ex.length){const nx=ex.shift(),{url,...rec}=images[nx];await delImg(bid);await delImg(nx);await putImg({...rec,id:bid});b.extra=ex}else await delImg(bid)}
+  else{await delImg(iid);b.extra=(b.extra||[]).filter(i=>i!==iid)}
+  dirty();render()}
 function imgExt(r){return((r.dataUrl.match(/^data:image\/(\w+)/)||[])[1]||'png').replace('jpeg','jpg')}
-function downloadImg(id){const r=images[id];if(!r)return;const n=nums(),b=get(id);downloadBlob(new Blob([Uint8Array.from(atob(r.dataUrl.split(',')[1]),c=>c.charCodeAt(0))],{type:'image/'+imgExt(r)}),`${n.ev[id]}-${slug(b.cap)||'captura'}.${imgExt(r)}`)}
-function openLb(id){const r=images[id],b=get(id);$('#lb-t').textContent=(nums().ev[id])+(b.cap?' · '+b.cap:'');$('#lb-img').src=r.url;$('#lb-dl').onclick=()=>downloadImg(id);openOv('lb-ov')}
+function imgFileName(b,iid,r){const ids=imgIds(b),k=ids.indexOf(iid),n=nums();return`${n.ev[b.id]}${ids.length>1?'-'+(k+1):''}-${slug(r.label||b.cap)||'captura'}.${imgExt(r)}`}
+function downloadImg(bid,iid){iid=iid||bid;const r=images[iid],b=get(bid);if(!r)return;downloadBlob(new Blob([Uint8Array.from(atob(r.dataUrl.split(',')[1]),c=>c.charCodeAt(0))],{type:'image/'+imgExt(r)}),imgFileName(b,iid,r))}
+function openLb(bid,iid){iid=iid||bid;const r=images[iid],b=get(bid),ids=imgIds(b),k=ids.indexOf(iid);$('#lb-t').textContent=(nums().ev[bid])+(ids.length>1?' · Captura '+(k+1)+' de '+ids.length:'')+(r.label?' · '+r.label:(b.cap?' · '+b.cap:''));$('#lb-img').src=r.url;$('#lb-dl').onclick=()=>downloadImg(bid,iid);openOv('lb-ov')}
 document.addEventListener('paste',e=>{if(!doc||$('#start').classList.contains('on'))return;const items=[...(e.clipboardData?.items||[])];const it=items.find(i=>i.kind==='file'&&i.type.startsWith('image/'));if(!it)return;
   if(/^(TEXTAREA|INPUT)$/.test(e.target.tagName)&&items.some(i=>i.kind==='string'&&i.type==='text/plain'))return;e.preventDefault();
   const f=it.getAsFile(),a=active&&get(active);
-  if(a&&a.t==='img'&&!images[a.id])fillFiles(a.id,[f]);else if(lastPos&&get(lastPos))fillFiles(lastPos,[f],'new');else fillFiles(null,[f],'end')});
+  if(a&&a.t==='img'&&a.mode!=='txt')fillFiles(a.id,[f]);else if(lastPos&&get(lastPos))fillFiles(lastPos,[f],'new');else fillFiles(null,[f],'end')});
 function track(e){const c=e.target.closest&&e.target.closest('[data-b]');if(!c)return;lastPos=c.dataset.b;const b=get(lastPos);const na=b&&b.t==='img'?lastPos:null;
   if(na!==active){active=na;$$('.ev.act').forEach(x=>x.classList.remove('act'));if(na)c.querySelector('.ev')?.classList.add('act')}}
 document.addEventListener('click',track);document.addEventListener('focusin',track);
@@ -389,14 +459,17 @@ function parseTemplate(src,fname){src=src.replace(/^\uFEFF/,'').replace(/\r\n?/g
       else blocks.push(mk('p',{text:'**'+t+'**'}));continue}
     if((m=l.match(/^\s*!\[([^\]]*)\]\(([^)]*)\)\s*$/))){flush();const b=mk('img',{cap:m[1].trim()});const u=m[2].trim();
       if(/^data:image\//.test(u))imgs[b.id]={id:b.id,dataUrl:u,name:'imagen',updatedAt:''};const[a,e]=quote(n);if(a){b.note=a.replace(/^\*\*Observaci[oó]n t[eé]cnica:\*\*\s*/i,'');n=e}blocks.push(b);continue}
-    if((m=l.match(/^\s*_?\*?[\[<]\s*(?:IMAGEN|IMG|CAPTURA|EVIDENCIA)(?:\s+PENDIENTE)?\s*:\s*(.+?)\s*[\]>]\*?_?\s*$/i))){flush();blocks.push(mk('img',{cap:m[1]}));continue}
+    if((m=l.match(/^\s*_?\*?[\[<]\s*(IMAGEN|IMG|CAPTURA|EVIDENCIA|SALIDA|OUTPUT|CONSOLA)(?:\s+PENDIENTE)?\s*:\s*(.+?)\s*[\]>]\*?_?\s*$/i))){flush();const tx=/^(SALIDA|OUTPUT|CONSOLA)$/i.test(m[1]),b=mk('img',{cap:m[2],mode:tx?'txt':'img'});
+      if(tx){let k=n+1;while(k<lines.length&&!lines[k].trim())k++;const fm=k<lines.length&&lines[k].match(/^\s*(`{3,}|~{3,})\s*(consola|salida|output)\s*$/i);
+        if(fm){const ch=fm[1][0],buf=[];k++;while(k<lines.length&&!(/^\s*(`{3,}|~{3,})\s*$/.test(lines[k])&&lines[k].trim()[0]===ch)){buf.push(lines[k]);k++}b.out=buf.join('\n');n=k}}
+      const[a2,e2]=quote(n);if(a2){b.note=a2.replace(/^\*\*Observaci[oó]n t[eé]cnica:\*\*\s*/i,'');n=e2}blocks.push(b);continue}
     if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(l)){flush();continue}
     if(!l.trim()){flush();continue}
     para.push(l)}
   flush();if(!info.title)info.title=(fname||'').replace(/\.(md|markdown|txt)$/i,'').replace(/[_]+/g,' ').trim();
   const hs=blocks.filter(b=>LV[b.t]),numd=hs.filter(b=>/^(?:(?:paso|parte|secci[oó]n|subsecci[oó]n|fase|tarea|ejercicio|actividad)\s*)?\d+(?:[.\-]\d+)*[.):]?(?:\s|$)/i.test(b.text)).length;
   return{info,blocks,imgs,numbering:!(hs.length&&numd/hs.length>=.5)}}
-async function newDoc(d,imgs){await clearImgs();doc=d;for(const id in imgs||{})await putImg(imgs[id]);undoStack=[];active=null;lastPos=null;insertFor=null;meta={backupAt:null,dirty:false};persistDoc();persistMeta()}
+async function newDoc(d,imgs){await clearImgs();doc=d;syncDone();for(const id in imgs||{})await putImg(imgs[id]);initFull();undoStack=[];active=null;lastPos=null;insertFor=null;meta={backupAt:null,dirty:false};persistDoc();persistMeta()}
 function guard(fn){if(doc&&doc.blocks.length)ask('¿Reemplazar la práctica actual?','Se sustituirá el contenido actual, incluidas sus imágenes. Si no has guardado un .json no podrás recuperarlo.','Reemplazar',fn);else fn()}
 const sv=id=>$('#'+id).value.trim();
 async function useTemplateText(text,fname){const t=parseTemplate(text,fname);if(!t.blocks.length)return showToast('La plantilla no contiene secciones ni contenido reconocible.','warning');
@@ -410,9 +483,9 @@ function startBlank(){const t=sv('s-title');if(!t){showToast('Escribe el nombre 
 const F='```';
 const SAMPLE=['---','titulo: Configuración de DHCPv4 con relay','estudiante: ','grupo: ','---','','# Topología y direccionamiento','','Arma la topología con tres routers y dos switches y verifica los enlaces entre ellos.','',
 '![Topología completa en Packet Tracer](topologia.png)','','| Dispositivo | Interfaz | Dirección IP | Máscara |','|---|---|---|---|','| R1 | G0/0 | 192.168.10.1 | 255.255.255.0 |','| R2 | G0/1 | 10.0.0.2 | 255.255.255.252 |','',
-'## Configurar R1','','### Asignar direcciones a las interfaces','',F+' R1','enable','configure terminal','interface g0/0','ip address 192.168.10.1 255.255.255.0','no shutdown',F,'','[IMAGEN: Salida de show ip interface brief en R1]','',
+'## Configurar R1','','### Asignar direcciones a las interfaces','',F+' R1','enable','configure terminal','interface g0/0','ip address 192.168.10.1 255.255.255.0','no shutdown',F,'','[SALIDA: Salida de show ip interface brief en R1]','',
 '#### ¿Qué estado muestran las interfaces después de aplicar no shutdown?','','## Configurar el servidor DHCP en R2','','Crea el pool y excluye las direcciones del gateway.','',F+' R2','ip dhcp excluded-address 192.168.10.1 192.168.10.10','ip dhcp pool LAN-R1','network 192.168.10.0 255.255.255.0','default-router 192.168.10.1',F,'',
-'# Verificación','','## Comprobar la asignación en la PC','','![Resultado de ipconfig /all en PC0](ipconfig.png)','','#### ¿Qué función cumple el comando ip helper-address?',''].join('\n');
+'# Verificación','','## Comprobar la asignación en la PC','','[SALIDA: Resultado de ipconfig /all en PC0]','','#### ¿Qué función cumple el comando ip helper-address?',''].join('\n');
 
 const GUIDE=[
 '# Guía de formato de plantilla — Framework de prácticas de Packet Tracer','',
@@ -426,13 +499,13 @@ const GUIDE=[
 '| §#### Pregunta§ | **Pregunta** con cuadro de respuesta |',
 '| Párrafos, listas (§- §, §1. §), **negrita**, §código§ y tablas Markdown | Texto normal |',
 '| Bloque delimitado con tres comillas invertidas | Bloque de comandos con botón «Copiar» |',
-'| §[IMAGEN: descripción]§ o §![descripción](x)§ | Espacio para subir o pegar una captura (evidencia) |','',
+'| §[IMAGEN: descripción]§ | Evidencia que se sube como **captura de pantalla** |','| §[SALIDA: descripción]§ | Evidencia que se **pega como texto** (salida de consola) y se muestra como bloque de código |','',
 '## 2. Reglas obligatorias','',
 '1. Entrega **solo el contenido del archivo .md**, sin explicaciones antes ni después. Si tu interfaz lo permite, entrégalo como archivo descargable; si no, en un único bloque de código Markdown.',
 '2. Usa **solo** los niveles §#§, §##§, §###§ y §####§. No uses §#####§ ni §######§, ni HTML.',
 '3. Jerarquía: §#§ = parte o sección grande de la práctica; §##§ = paso principal; §###§ = sub-paso concreto dentro de un paso; §####§ = pregunta de análisis. No saltes niveles (no pongas §###§ sin un §##§ previo).',
 '4. **No numeres los títulos a mano** (nada de «1.», «Paso 1.2»…); el framework los numera solo. Si la práctica original ya los numera de forma importante, mantenlos en el texto del título y se respetarán.',
-'5. **Capturas de pantalla:** cada vez que la práctica pida evidencia, un resultado, una topología o una verificación, coloca una línea §[IMAGEN: descripción]§ **justo después** del paso o sub-paso que la requiere. La descripción debe decir qué debe verse (dispositivo, comando y resultado esperado). Ejemplo: §[IMAGEN: Salida de show ip interface brief en R1 con G0/0 en up/up]§. Nunca pongas rutas o nombres de archivo reales.',
+'5. **Evidencias:** cada vez que la práctica pida evidencia, un resultado o una verificación, coloca una línea de evidencia **justo después** del paso o sub-paso que la requiere. La descripción debe decir qué debe verse (dispositivo, comando y resultado esperado). Elige el tipo así: usa §[SALIDA: descripción]§ cuando la evidencia sea **texto de consola** (show, ping, traceroute, ipconfig, etc.), porque el estudiante la pegará como bloque de código; usa §[IMAGEN: descripción]§ cuando sea algo **visual** (topología, ventanas gráficas, modo Simulation, pestañas de configuración de una PC o servidor). Ejemplos: §[SALIDA: show ip interface brief en R1 con G0/0 en up/up]§ y §[IMAGEN: Topología completa en Packet Tracer]§. Nunca pongas rutas o nombres de archivo reales.',
 '6. **Comandos:** colócalos en bloques de código, **uno por dispositivo y modo de trabajo**, con el nombre del dispositivo como etiqueta tras las comillas (por ejemplo §R1§, §SW1§, §PC0§). Incluye solo lo que se debe teclear, en orden, uno por línea. La salida esperada o las explicaciones van como texto normal, fuera del bloque.',
 '7. **Tablas** (direccionamiento IP, VLAN, puertos, credenciales de laboratorio…): como tablas Markdown, con la fila separadora §|---|---|§. Cópialas con exactitud.',
 '8. **Preguntas:** una por encabezado §####§ y con el enunciado completo. **No escribas la respuesta** (el estudiante la redactará), a menos que el usuario te lo pida; en ese caso ponla debajo como cita con §> §.',
@@ -442,7 +515,7 @@ const GUIDE=[
 '## 3. Lista de verificación antes de entregar','',
 '- [ ] El archivo empieza con el encabezado YAML (o directamente con §#§).',
 '- [ ] Solo hay encabezados de nivel 1 a 4.',
-'- [ ] Cada captura requerida tiene su línea §[IMAGEN: …]§ con descripción útil.',
+'- [ ] Cada evidencia requerida tiene su línea §[IMAGEN: …]§ (visual) o §[SALIDA: …]§ (texto de consola) con descripción útil.',
 '- [ ] Cada bloque de comandos tiene etiqueta de dispositivo y está bien cerrado.',
 '- [ ] Las tablas tienen fila separadora y los datos coinciden con la práctica original.',
 '- [ ] Las preguntas están como §####§ y sin respuesta.',
@@ -455,11 +528,11 @@ const GUIDE=[
 '| Dispositivo | Interfaz | Dirección IP | Máscara |','|---|---|---|---|','| R1 | G0/0 | 192.168.10.1 | 255.255.255.0 |','| R2 | G0/1 | 10.0.0.2 | 255.255.255.252 |','',
 '## Configurar R1','','### Asignar direcciones a las interfaces','','Configura la interfaz G0/0 y actívala.','',
 '```R1','enable','configure terminal','interface g0/0','ip address 192.168.10.1 255.255.255.0','no shutdown','```','',
-'[IMAGEN: Salida de show ip interface brief en R1 con G0/0 en up/up]','',
+'[SALIDA: show ip interface brief en R1 con G0/0 en up/up]','',
 '#### ¿Qué estado muestran las interfaces después de aplicar no shutdown?','',
 '## Configurar el servidor DHCP en R2','','Crea el pool y excluye las direcciones del gateway.','',
 '```R2','ip dhcp excluded-address 192.168.10.1 192.168.10.10','ip dhcp pool LAN-R1','network 192.168.10.0 255.255.255.0','default-router 192.168.10.1','```','',
-'# Verificación','','## Comprobar la asignación en la PC','','[IMAGEN: Resultado de ipconfig /all en PC0 con IP asignada por DHCP]','',
+'# Verificación','','## Comprobar la asignación en la PC','','[SALIDA: ipconfig /all en PC0 con IP asignada por DHCP]','',
 '#### ¿Qué función cumple el comando ip helper-address?','','````'
 ].join('\n').replace(/§/g,'`');
 function downloadGuide(){downloadBlob(new Blob([GUIDE],{type:'text/markdown;charset=utf-8'}),'GUIA-FORMATO-PLANTILLA.md')}
@@ -471,13 +544,13 @@ function hideStart(){$('#start').classList.remove('on');['s-title','s-name','s-g
 
 /* ================= progreso .json ================= */
 function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
-function saveProgress(){if(!doc)return;try{const used={};doc.blocks.forEach(b=>{if(b.t==='img'&&images[b.id]){const{url,...r}=images[b.id];used[b.id]=r}});
+function saveProgress(){if(!doc)return;try{const used={};doc.blocks.forEach(b=>{if(b.t==='img')imgIds(b).forEach(i=>{const{url,...r}=images[i];used[i]=r})});
   const p={app:'pt-framework',version:1,exportedAt:new Date().toISOString(),doc,images:used};
   downloadBlob(new Blob([JSON.stringify(p)],{type:'application/json'}),`Progreso-${slug(doc.title)||'practica'}-${new Date().toISOString().slice(0,10)}.json`);
   meta={backupAt:p.exportedAt,dirty:false};persistMeta();ui();showToast('Progreso guardado en un archivo .json.','success')}catch(e){console.error(e);showToast('No se pudo generar el archivo .json.','error')}}
 function onJsonInput(ev){const f=ev.target.files[0];ev.target.value='';if(f)f.text().then(loadProgressText)}
 function loadProgressText(txt){let p;try{p=JSON.parse(txt);if(!p||!p.doc||!Array.isArray(p.doc.blocks))throw 0}catch(e){return showToast('Ese archivo no es un progreso válido de este framework.','error')}
-  guard(async()=>{const d=normDoc(p.doc),imgs={};for(const b of d.blocks){const r=p.images&&p.images[b.id];if(b.t==='img'&&r&&r.dataUrl)imgs[b.id]={...r,id:b.id}}
+  guard(async()=>{const d=normDoc(p.doc),imgs={};for(const b of d.blocks){if(b.t!=='img')continue;const ex=[];for(const i of [b.id,...(b.extra||[])]){const r=p.images&&p.images[i];if(r&&r.dataUrl){imgs[i]={...r,id:i};if(i!==b.id)ex.push(i)}}b.extra=ex}
     await newDoc(d,imgs);meta={backupAt:p.exportedAt||null,dirty:false};persistMeta();edit=!d.blocks.length;hideStart();render();const s=stats();showToast(`Progreso cargado: ${s.sd}/${s.st} pasos, ${s.ed}/${s.et} evidencias.`,'success')})}
 
 /* ================= exportar reporte ================= */
@@ -503,7 +576,7 @@ function chooseStyle(){const sel=$('#export-theme').value;let theme,lay;
   else{theme=REPORT_THEMES.find(t=>t.id===sel)||REPORT_THEMES[0];lay={head:'banner',card:'box',table:'zebra'}}
   try{localStorage.setItem('pt_last_theme',theme.id)}catch(e){}return{theme,lay}}
 function collect(){doc.title=$('#ex-title').value.trim();doc.student=$('#ex-name').value.trim();doc.group=$('#ex-group').value.trim();persistDoc();hdr();
-  const n=nums();let sec='';const items=doc.blocks.map(b=>{if(b.t==='h1')sec=b.text;return{b,lab:n.lab[b.id]||'',ev:n.ev[b.id]||'',sec,img:images[b.id]||null}});
+  const n=nums();let sec='';const items=doc.blocks.map(b=>{if(b.t==='h1')sec=b.text;return{b,lab:n.lab[b.id]||'',ev:n.ev[b.id]||'',sec,imgs:b.t==='img'&&b.mode!=='txt'?imgIds(b).map(i=>images[i]):[]}});
   return{title:doc.title||'Práctica de Packet Tracer',student:doc.student,group:doc.group,items,st:stats(),nowStr:new Date().toLocaleString('es-MX',{dateStyle:'long',timeStyle:'short'})}}
 const REPORT_BASE=`*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 html,body{margin:0;background:var(--bg)}
@@ -552,20 +625,21 @@ th,td{padding:8px 10px;border:1px solid var(--line)}
 footer{text-align:center;color:var(--muted);font-size:11px;margin-top:30px}
 @media print{@page{size:A4;margin:10mm}body{padding:0;background:var(--paper)}.wrap{border:0;border-radius:0;max-width:none;padding-bottom:0}.body{padding:0 4px}.h{padding:18px 20px 14px!important;margin:0!important}.h h1{font-size:22px;margin:4px 0 8px}h2{font-size:16px;margin:16px 0 8px;break-after:avoid}.card{break-inside:auto;padding:10px 12px;margin-bottom:10px}.card h3{break-after:avoid;font-size:14px;margin:0 0 4px}.card-top{break-after:avoid;margin-bottom:4px}.muted{margin:0 0 6px;font-size:12px}.shot{break-inside:avoid;padding:6px;margin:6px 0}.shot img{max-height:105mm;max-width:100%;width:auto}.note,.ans{break-inside:avoid}table{font-size:11px}th,td{padding:4px 8px}.empty{padding:10px;margin:6px 0}footer{margin-top:12px}}
 @media(max-width:640px){.body{padding:4px 18px 0}.h{padding:26px 20px 20px}}`;
-const REPORT_EXTRA=`h3{font-family:var(--head);font-size:17px;margin:24px 0 8px}h4{font-family:var(--head);font-size:15px;margin:18px 0 6px}.num{color:var(--accent);font-family:ui-monospace,Consolas,monospace;font-size:.85em}
+const REPORT_EXTRA=`.shl{font-weight:600;font-size:13px;margin:0 0 6px;text-align:left}h3{font-family:var(--head);font-size:17px;margin:24px 0 8px}h4{font-family:var(--head);font-size:15px;margin:18px 0 6px}.num{color:var(--accent);font-family:ui-monospace,Consolas,monospace;font-size:.85em}
 .txt{margin:8px 0}.txt p{margin:0 0 10px}.txt ul,.txt ol{padding-left:22px;margin:6px 0 10px}.txt .tbl{overflow-x:auto;margin:10px 0}code{font-family:ui-monospace,Consolas,monospace;background:var(--soft);padding:1px 5px;font-size:.9em}
 pre.cmd{background:var(--soft);border:1px solid var(--line);border-left:4px solid var(--accent);padding:10px 12px;margin:10px 0;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,Consolas,monospace}pre.cmd code{background:none;padding:0}
 .cmdl{font-size:11px;font-weight:700;color:var(--muted);margin:10px 0 -6px;letter-spacing:.06em;text-transform:uppercase}
 @media print{h3{margin:14px 0 6px;font-size:14px;break-after:avoid}h4{break-after:avoid}pre.cmd{break-inside:avoid}}`;
 function reportCss(th){return`:root{${Object.entries(th.v).map(([k,x])=>`--${k}:${x}`).join(';')}}\n`+REPORT_BASE+REPORT_EXTRA}
+const shotHtml=(im,k,n,b,ev)=>{const t=(n>1?'Captura '+(k+1)+' de '+n:'')+(im.label?(n>1?' · ':'')+im.label:'');return`<div class="shot">${t?`<div class="shl">${E(t)}</div>`:''}<img src="${im.dataUrl}" alt="${E(im.label||b.cap||ev)}"/>${im.updatedAt?`<small>Capturado: ${E(im.updatedAt)}</small>`:''}</div>`};
 function bodyHtml(d){const e=E;let out='';
   const evs=d.items.filter(i=>i.b.t==='img');
-  if(evs.length)out+=`<h2>Resumen de evidencias</h2><table><thead><tr><th>ID</th><th>Sección</th><th>Descripción</th><th>Estado</th></tr></thead><tbody>${evs.map(i=>`<tr><td class="mono"><b>${i.ev}</b></td><td>${e(i.sec)}</td><td>${inl(i.b.cap)||'—'}</td><td class="${i.img?'ok':'pend'}">${i.img?'Completada':'Pendiente'}</td></tr>`).join('')}</tbody></table>`;
-  d.items.forEach(({b,lab,ev,img})=>{const T=(lab?`<span class="num">${e(lab)}</span> `:'')+e(b.text),ck=b.done?' <span class="ok" title="Completado">✓</span>':'';
+  if(evs.length)out+=`<h2>Resumen de evidencias</h2><table><thead><tr><th>ID</th><th>Sección</th><th>Descripción</th><th>Estado</th></tr></thead><tbody>${evs.map(i=>`<tr><td class="mono"><b>${i.ev}</b></td><td>${e(i.sec)}</td><td>${inl(i.b.cap)||'—'}</td><td class="${evOk(i.b)?'ok':'pend'}">${evOk(i.b)?'Completada':'Pendiente'}</td></tr>`).join('')}</tbody></table>`;
+  d.items.forEach(({b,lab,ev,imgs})=>{const T=(lab?`<span class="num">${e(lab)}</span> `:'')+e(b.text),ck=b.done?' <span class="ok" title="Completado">✓</span>':'';
     if(b.t==='h1')out+=`<h2>${T}</h2>`;else if(b.t==='h2')out+=`<h3>${T}${ck}</h3>`;else if(b.t==='h3')out+=`<h4>${T}${ck}</h4>`;
     else if(b.t==='p'){if(b.text.trim())out+=`<div class="txt">${md(b.text)}</div>`}
     else if(b.t==='code')out+=(b.lang?`<div class="cmdl">${e(b.lang)}</div>`:'')+`<pre class="cmd"><code>${e(b.text)}</code></pre>`;
-    else if(b.t==='img')out+=`<div class="card"><div class="card-top"><div><span class="tag">${ev}</span></div><span class="pill">Evidencia</span></div>${b.cap?`<h3 style="margin-top:0">${inl(b.cap)}</h3>`:''}${img?`<div class="shot"><img src="${img.dataUrl}" alt="${e(b.cap||ev)}"/>${img.updatedAt?`<small>Capturado: ${e(img.updatedAt)}</small>`:''}</div>`:'<div class="empty">[Evidencia pendiente de captura]</div>'}${b.note.trim()?`<div class="note"><b>Observación técnica:</b> ${e(b.note.trim()).replace(/\n/g,'<br>')}</div>`:''}</div>`;
+    else if(b.t==='img'){const tx=b.mode==='txt';out+=`<div class="card"><div class="card-top"><div><span class="tag">${ev}</span></div><span class="pill">${tx?'Salida de consola':'Captura'}</span></div>${b.cap?`<h3 style="margin-top:0">${inl(b.cap)}</h3>`:''}${tx?(b.out.trim()?`<pre class="cmd"><code>${e(b.out.replace(/\s+$/,''))}</code></pre>`:'<div class="empty">[Salida pendiente]</div>'):(imgs.length?imgs.map((im,k)=>shotHtml(im,k,imgs.length,b,ev)).join(''):'<div class="empty">[Evidencia pendiente de captura]</div>')}${b.note.trim()?`<div class="note"><b>Observación técnica:</b> ${e(b.note.trim()).replace(/\n/g,'<br>')}</div>`:''}</div>`}
     else if(b.t==='q')out+=`<div class="card"><h3 style="margin-top:0">${lab?`<span class="num">${e(lab)}</span> `:''}${inl(b.text)}</h3><div class="ans">${b.ans.trim()?e(b.ans.trim()).replace(/\n/g,'<br>'):'<em class="muted">Sin respuesta registrada.</em>'}</div></div>`});
   return out}
 function buildHtml(d,th,lay){const e=E,s=d.st;
@@ -578,17 +652,19 @@ function buildHtml(d,th,lay){const e=E,s=d.st;
 </div></body></html>`}
 function buildMd(d,imgRef){const one=s=>String(s||'').replace(/\s*\n\s*/g,' ').trim(),quote=s=>s.split('\n').map(l=>'> '+l).join('\n');
   const L=['---',`titulo: ${one(d.title)}`,`estudiante: ${one(d.student)}`,`grupo: ${one(d.group)}`,`fecha: ${d.nowStr}`,'---',''];
-  d.items.forEach(({b,lab,ev,img})=>{const pre=lab?lab+' ':'';
+  d.items.forEach(({b,lab,ev,imgs})=>{const pre=lab?lab+' ':'';
     if(b.t==='h1'&&b.text.trim())L.push('# '+pre+one(b.text),'');else if(b.t==='h2'&&b.text.trim())L.push('## '+pre+one(b.text),'');else if(b.t==='h3'&&b.text.trim())L.push('### '+pre+one(b.text),'');
     else if(b.t==='p'){if(b.text.trim())L.push(b.text.trim(),'')}
     else if(b.t==='code'){const f=b.text.includes('```')?'~~~':'```';L.push(f+(b.lang||'').replace(/\s+/g,'-'),b.text,f,'')}
-    else if(b.t==='img'){const cap=(b.cap||ev).replace(/[\[\]]/g,'');L.push(img?`![${cap}](${imgRef(b,img,ev)})`:`_[Evidencia pendiente: ${cap}]_`,'');if(b.note.trim())L.push(quote('**Observación técnica:** '+b.note.trim()),'')}
+    else if(b.t==='img'){const cap=(b.cap||ev).replace(/[\[\]]/g,'');
+      if(b.mode==='txt'){if(b.out.trim()){const f=b.out.includes('```')?'~~~':'```';L.push(`[SALIDA: ${cap}]`,'',f+'consola',b.out.replace(/\s+$/,''),f,'')}else L.push(`_[Salida pendiente: ${cap}]_`,'')}
+      else if(imgs.length)imgs.forEach((im,k)=>{const t=(imgs.length>1?'Captura '+(k+1):'')+(im.label?(imgs.length>1?' · ':'')+im.label:'');if(t)L.push('**'+t.replace(/[*\[\]]/g,'')+'**','');L.push(`![${(im.label||cap).replace(/[\[\]]/g,'')}](${imgRef(im)})`,'')});else L.push(`_[Evidencia pendiente: ${cap}]_`,'');if(b.note.trim())L.push(quote('**Observación técnica:** '+b.note.trim()),'')}
     else if(b.t==='q'){L.push('#### '+pre+one(b.text),'',quote(b.ans.trim()||'_Sin respuesta registrada._'),'')}});
   return L.join('\n')}
 async function exportMd(d){const base='Reporte-'+(slug(d.title)||'practica');
-  if(!window.JSZip){downloadBlob(new Blob([buildMd(d,(b,r)=>r.dataUrl)],{type:'text/markdown;charset=utf-8'}),base+'.md');showToast('JSZip no cargó (¿sin internet?): .md con imágenes incrustadas en base64.','info');return}
-  const zip=new JSZip(),names={};d.items.forEach(({b,img,ev})=>{if(b.t==='img'&&img)names[b.id]=`images/${ev}-${slug(b.cap)||'captura'}.${imgExt(img)}`});
-  zip.file(base+'.md',buildMd(d,b=>names[b.id]));d.items.forEach(({b,img})=>{if(img&&names[b.id])zip.file(names[b.id],img.dataUrl.split(',')[1],{base64:true})});
+  if(!window.JSZip){downloadBlob(new Blob([buildMd(d,im=>im.dataUrl)],{type:'text/markdown;charset=utf-8'}),base+'.md');showToast('JSZip no cargó (¿sin internet?): .md con imágenes incrustadas en base64.','info');return}
+  const zip=new JSZip(),names={};d.items.forEach(({b,imgs,ev})=>imgs.forEach((im,k)=>{names[im.id]=`images/${ev}${imgs.length>1?'-'+(k+1):''}-${slug(im.label||b.cap)||'captura'}.${imgExt(im)}`}));
+  zip.file(base+'.md',buildMd(d,im=>names[im.id]));d.items.forEach(({imgs})=>imgs.forEach(im=>{if(names[im.id])zip.file(names[im.id],im.dataUrl.split(',')[1],{base64:true})}));
   downloadBlob(await zip.generateAsync({type:'blob'}),base+'.zip')}
 function printPdf(d,th,lay){const fr=document.createElement('iframe');fr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';document.body.appendChild(fr);
   fr.onload=()=>{const w=fr.contentWindow;Promise.all([...w.document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r}))).then(()=>{const ot=document.title;document.title='Reporte-'+(slug(d.title)||'practica');
@@ -605,6 +681,7 @@ document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();
   else if((e.ctrlKey||e.metaKey)&&k==='z'&&!/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)&&edit){e.preventDefault();undo()}
   else if(k==='escape'){$$('.ov.on').forEach(o=>o.classList.remove('on'))}});
 window.addEventListener('DOMContentLoaded',async()=>{loadLocal();try{await initDB();for(const r of(await idb('readonly',s=>s.getAll())||[]))await putImg(r)}catch(e){}
+  if(doc)initFull();
   if(doc){render();$('#start').classList.remove('on')}else showStart()});
 </script>
 </body>
